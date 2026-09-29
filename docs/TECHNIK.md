@@ -4,7 +4,7 @@
 
 Mobile-first Web App (PWA) mit drei Oberflächen auf einem Backend:
 
-- **Nutzer-App**: Journey, Marktplatz, Buchung, Aufträge, Services, Punkte, Dila AI
+- **Nutzer-App**: Journey, Marktplatz, Buchung, Aufträge, Services, Punkte, GTA ONE Assistent
 - **Partner-Portal**: Profil, Leistungen, Aufträge, Nachweise, Nachrichten, Kennzahlen
 - **Admin**: Verifizierung, Kategorien, Transaktionen, Beschwerden, Bewertungen, Inhalte, KPIs
 
@@ -32,7 +32,7 @@ flowchart TB
     DOC[Documents Vault]
     NOT[Notifications]
     LOY[Loyalty & Points]
-    AI[AI Layer / Dila]
+    AI[AI Layer / GTA ONE Assistent]
   end
   subgraph Ext[Integrationen]
     PSP[(Payment-Provider mit Marktplatz-Lizenz)]
@@ -98,10 +98,10 @@ flowchart TB
 | 3 · Buchung & SafePay | Order-Modell, Meilensteine, PSP-Integration (Sandbox), Belege, Webhooks | Testzahlung End-to-End |
 | 4 · Abwicklung | Dokumenten-Tresor, Nachweise, Messaging, Benachrichtigungen (E-Mail/SMS/Telegram) | Auftrag komplett abwickelbar |
 | 5 · Portale | Partner-Portal, Verifizierungs-Workflow, Admin (Freigabe, Sperre, Beschwerden, Moderation) | Partner-Onboarding |
-| 6 · Bindung & Launch | Bewertungen, Punkte-Ledger, Dila (LLM + Wissensbasis), Videos, Analytics, Security-Review, Pen-Test | Closed Beta |
+| 6 · Bindung & Launch | Bewertungen, Punkte-Ledger, GTA ONE Assistent (LLM + Wissensbasis), Videos, Analytics, Security-Review, Pen-Test | Closed Beta |
 
 Kernteam-Annahme: 2 Full-Stack, 1 Design, 1 Product Owner, QA in Teilzeit; Rechtsprüfung parallel.
 
 ## 7. Vom Prototyp zum Produkt
 
-Der Prototyp in `app/index.html` bildet Oberflächen und Abläufe ab. Für das Produkt werden die Beispieldaten durch die API ersetzt, die regelbasierte Dila-Logik durch ein Sprachmodell mit Journey-Kontext und geprüfter Wissensbasis, und alle Zahlungs-, KYC- und Dokumentenfunktionen durch die Integrationen oben.
+Der Prototyp in `app/index.html` bildet Oberflächen und Abläufe ab. Für das Produkt werden die Beispieldaten durch die API ersetzt, die regelbasierte Assistenten-Logik durch ein Sprachmodell mit Journey-Kontext und geprüfter Wissensbasis, und alle Zahlungs-, KYC- und Dokumentenfunktionen durch die Integrationen oben.

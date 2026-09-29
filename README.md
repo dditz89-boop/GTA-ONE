@@ -6,20 +6,28 @@ Klickbarer MVP-Prototyp (Konzept v0.1) für eine Plattform, die Menschen aus Zen
 
 `app/index.html` im Browser öffnen. Kein Build, kein Backend. Alle Daten sind Beispieldaten und werden nur im Browser (`localStorage`) gespeichert. Zahlungen sind simuliert.
 
-Rollen oben rechts umschalten: **Kunde · Partner · Admin**. Sprachen: **UZ · RU · DE · EN** (Oberfläche übersetzt, Inhalte im MVP auf Deutsch).
+Oben rechts: **Sprache** (Usbekisch, Russisch, Deutsch, Englisch – Oberfläche und Inhalte), **Mitteilungen** und **Demo-Ansicht** (Kunde · Anbieter · GTA Team). Beim ersten Start erklärt eine kurze Tour in 4 Schritten, wie die App funktioniert.
 
 ## Was der Prototyp zeigt
 
 | Bereich | Funktionen |
 |---|---|
-| My Journey | Onboarding (8 Fragen) → 8 Phasen mit Aufgaben, abhängig von Beruf, Ziel, Vertrag, Familienstand; „Jetzt dran“ mit passenden geprüften Partnern |
-| Marktplatz | Kategorien, Suche, GTA Verified / Verified Pro / Certified Operator, Trust Score, Bewertungen nur aus Buchungen |
-| GTA SafePay | Buchung mit Meilensteinen, Geld in Treuhand, Freigabe durch Kunde, Beschwerde friert Zahlung ein, Punkte als Rabatt |
-| Aufträge | Status, Meilenstein-Balken, Dokumente, Nachrichten mit Warnung bei Barzahlungs-Anfragen, Bewertung nach Abschluss |
-| Services | Geldtransfer-Vergleich, SIM/eSIM mit Aktivierungsanleitung, Deutschlandticket & Bahn, Versicherung & Bank (Tippgeber-Modell), lokale Anbieter |
-| Konto | GTA Points (Sammeln, Einlösen, Bronze/Silber/Gold, Einladungscode), Dokumenten-Tresor, Dila-Erklärvideos, Profil |
-| Dila AI | Chat mit Journey-Kontext (im Prototyp regelbasiert) |
-| Partner-Portal | Kennzahlen, Aufträge, Nachweis je Meilenstein senden, Leistungen anlegen, Verifizierungs-Checkliste |
-| Admin | Partner freigeben/sperren/Stufe ändern (inkl. Warnsignale), Beschwerden entscheiden, Bewertungen moderieren, Kategorien mit Pflichtnachweisen |
+| Start | Nächster Schritt mit einem klaren Button, 12 große Kacheln für alle Services, offene Aufträge, Punkte |
+| Mein Weg | 8 Phasen mit Aufgaben, passend zu Beruf, Ziel, Vertrag und Familienstand; pro Aufgabe „Anbieter ansehen“ und „Hilfe“ |
+| Anbieter | Suche, Kategorien, GTA Verified / Verified Pro / Certified Operator, Bewertungen nur von echten Kunden |
+| Buchen & sicher bezahlen | 3 Schritte: Übersicht → Zahlungsart (Karte, Uzcard/Humo, SEPA) mit Punkte-Rabatt → Bestätigung |
+| Aufträge | Klarer Hinweis, wenn eine Bestätigung fehlt; Zahlung in Schritten; Problem melden; Bewerten (+50 Punkte); Dokumente; Chat mit Warnung bei Barzahlung |
+| Geld senden | Anbietervergleich nach Betrag, der ankommt; Überweisung mit Beleg |
+| SIM & Internet | Tarif wählen, eSIM in 4 Schritten aktivieren |
+| Bahn & Tickets | Deutschlandticket kaufen (Ticket mit QR-Code), Verbindungssuche |
+| Versicherung | 3-Fragen-Check mit Empfehlungen und kostenloser Beratungsanfrage |
+| Wohnung | Mietfilter, Merkliste, Anfrage mit fertigem deutschen Text |
+| Deutsch lernen | Alltagssätze mit Vorlesefunktion, Mini-Quiz mit Punkten |
+| Dokumente | Dokumenten-Tresor mit Upload, Koffer-Checkliste |
+| Punkte & Prämien | Status Bronze/Silber/Gold, Prämien einlösen, Einladungscode, Verlauf |
+| Notfall | 112, 110, 116 117 mit Kopier-Button |
+| GTA ONE Assistent | Chat in 4 Sprachen mit Journey-Kontext und Buttons, die direkt zur richtigen Seite führen (im Prototyp regelbasiert) |
+| Anbieter-Portal | Anfragen annehmen/ablehnen, Schritte als erledigt melden, Preise ändern, Leistungen pausieren/anlegen, Prüfunterlagen senden |
+| GTA Team | Neue Anbieter mit Warnsignalen prüfen, Beschwerden entscheiden, Bewertungen moderieren, Anbieter sperren und Stufen ändern |
 
 Technisches Konzept, Datenmodell und Backlog: [docs/TECHNIK.md](docs/TECHNIK.md).
