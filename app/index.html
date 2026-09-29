@@ -1,0 +1,782 @@
+<title>GTA ONE</title>
+<meta name="description" content="GTA ONE – Trusted Migration & Life Ecosystem. Klickbarer MVP-Prototyp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+/* Layout: sticky brand bar + tab bar (bottom on phones), one content column up to 1080px; cards only for objects the user acts on */
+:root{
+  --bg:#EEF2EE; --surface:#FBFCFA; --sunken:#E3E9E3; --ink:#0E1B33; --muted:#51607A; --line:#D5DDD5;
+  --brand:#157A52; --brand-ink:#F4F8F5; --brand-soft:#D8EDE2;
+  --gold:#94620A; --gold-soft:#FAEBC8; --gold-fill:#E8B84A;
+  --info:#2358A0; --info-soft:#DDE8F6; --danger:#B42318; --danger-soft:#FBE3E0;
+  --hero:#0E1B33; --hero-ink:#F4F6F2; --hero-muted:#B9C6D8;
+  --display:'Sora', 'Segoe UI', Arial, sans-serif; --body:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  --r:14px; --shadow:0 1px 2px rgba(14,27,51,.06), 0 6px 20px rgba(14,27,51,.06);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1322; --surface:#111D33; --sunken:#0D182B; --ink:#E8EEF6; --muted:#9DAEC6; --line:#223252;
+  --brand:#3DD68C; --brand-ink:#06150E; --brand-soft:#123A2B;
+  --gold:#E8B84A; --gold-soft:#3A2E10; --gold-fill:#E8B84A;
+  --info:#86B6F2; --info-soft:#15294A; --danger:#F7897D; --danger-soft:#3D1814;
+  --hero:#16284A; --hero-ink:#F4F6F2; --hero-muted:#B9C6D8; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1322; --surface:#111D33; --sunken:#0D182B; --ink:#E8EEF6; --muted:#9DAEC6; --line:#223252;
+  --brand:#3DD68C; --brand-ink:#06150E; --brand-soft:#123A2B;
+  --gold:#E8B84A; --gold-soft:#3A2E10; --gold-fill:#E8B84A;
+  --info:#86B6F2; --info-soft:#15294A; --danger:#F7897D; --danger-soft:#3D1814;
+  --hero:#16284A; --hero-ink:#F4F6F2; --hero-muted:#B9C6D8; --shadow:none; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;margin:0}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(24px,4vw,34px);line-height:1.15}
+h2{font-size:20px;line-height:1.25}
+h3{font-size:16px;line-height:1.3}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brand)}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--hero);color:var(--hero-ink)}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.logo i{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--gold-fill);color:#0E1B33;font-style:normal;font-size:13px}
+.spacer{flex:1}
+.seg{display:flex;background:rgba(255,255,255,.08);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:var(--hero-muted);padding:5px 9px;border-radius:7px;font-size:13px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--hero-ink);color:#0E1B33}
+.pts{display:flex;align-items:center;gap:6px;background:rgba(232,184,74,.16);color:#F3D48A;border:0;border-radius:999px;padding:5px 11px;font-weight:700;font-size:13px}
+
+/* tabs */
+.tabs{background:var(--surface);border-bottom:1px solid var(--line)}
+.tabs-in{max-width:1080px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto}
+.tab{border:0;background:none;padding:12px 12px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.tab[aria-current="page"]{color:var(--ink);border-bottom-color:var(--brand)}
+.tab svg{width:18px;height:18px}
+@media (max-width:720px){
+  .top{position:static}
+  .top-in{gap:8px}
+  .seg button{padding:4px 7px;font-size:12px}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;border-top:1px solid var(--line);border-bottom:0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .tabs-in{padding:0;justify-content:space-around}
+  .tab{flex-direction:column;gap:2px;font-size:11px;padding:8px 4px 7px;border-bottom:0;border-top:3px solid transparent;flex:1}
+  .tab[aria-current="page"]{border-top-color:var(--brand)}
+  main{padding-bottom:96px!important}
+  .dila-fab{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}
+}
+
+main{max-width:1080px;margin:0 auto;padding:24px 16px 64px;display:flex;flex-direction:column;gap:24px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.grid2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.grid2>*,.grid>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;min-width:0}
+.section{display:flex;flex-direction:column;gap:14px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.gold{background:var(--gold-fill);border-color:var(--gold-fill);color:#0E1B33}
+.btn.danger{color:var(--danger);border-color:var(--danger)}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{border:0;background:none;padding:0;color:var(--brand);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}
+.pill svg{width:13px;height:13px}
+.pill.v{background:var(--brand-soft);color:var(--brand)}
+.pill.vp{background:var(--info-soft);color:var(--info)}
+.pill.co{background:var(--gold-soft);color:var(--gold)}
+.pill.warn{background:var(--gold-soft);color:var(--gold)}
+.pill.bad{background:var(--danger-soft);color:var(--danger)}
+.pill.ok{background:var(--brand-soft);color:var(--brand)}
+.pill.neutral{background:var(--sunken);color:var(--muted)}
+.sample{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line);border-radius:6px;padding:1px 6px}
+
+input[type=text],input[type=number],input[type=search],select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;color:var(--muted)}
+.form{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+
+/* hero */
+.hero{background:var(--hero);color:var(--hero-ink);border-radius:20px;padding:24px;display:grid;gap:20px;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);position:relative;overflow:hidden}
+.hero .muted{color:var(--hero-muted)}
+.hero .eyebrow{color:#3DD68C}
+@media (max-width:760px){.hero{grid-template-columns:1fr}}
+.meter{height:8px;background:rgba(255,255,255,.14);border-radius:99px;overflow:hidden}
+.meter>span{display:block;height:100%;background:linear-gradient(90deg,#3DD68C,#E8B84A);border-radius:99px}
+.now{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.now .btn{background:transparent;border-color:rgba(255,255,255,.3);color:var(--hero-ink)}
+.now .btn.gold{background:var(--gold-fill);color:#0E1B33;border-color:var(--gold-fill)}
+
+/* journey rail */
+.rail{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.step{flex:1;min-width:92px;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:4px;text-align:center;border-radius:10px}
+.step b{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;font-family:var(--display);font-size:15px;border:2px solid var(--line);background:var(--surface);color:var(--muted)}
+.step.done b{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.step.cur b{background:var(--gold-fill);border-color:var(--gold-fill);color:#0E1B33}
+.step span{font-size:12px;font-weight:600;line-height:1.25;color:var(--muted)}
+.step.cur span,.step.done span{color:var(--ink)}
+.step[aria-pressed="true"]{background:var(--sunken)}
+.task{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.task:first-of-type{border-top:0}
+.task input{width:20px;height:20px;accent-color:var(--brand);margin-top:1px;flex:none}
+.task.is-done .t{text-decoration:line-through;color:var(--muted)}
+.task .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+
+/* partner */
+.pcard{cursor:pointer;text-align:left}
+.pcard:hover{border-color:var(--muted)}
+.avatar{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#F4F6F2;flex:none}
+.stars{color:var(--gold);font-weight:700}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:600}
+.svc{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--line)}
+
+/* milestones */
+.ms{display:flex;flex-direction:column;gap:0}
+.ms-row{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.ms-row:first-child{border-top:0}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);justify-self:center}
+.dot.released{background:var(--brand);border-color:var(--brand)}
+.dot.proof{background:var(--gold-fill);border-color:var(--gold-fill)}
+.dot.held{background:var(--surface);border-color:var(--info)}
+.bar{height:10px;border-radius:99px;background:var(--sunken);overflow:hidden;display:flex}
+.bar span{display:block;height:100%}
+
+/* chat */
+.chat{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow:auto;padding:4px}
+.msg{max-width:85%;padding:9px 12px;border-radius:14px;font-size:14px;white-space:pre-line}
+.msg.me{align-self:flex-end;background:var(--brand);color:var(--brand-ink);border-bottom-right-radius:4px}
+.msg.them{align-self:flex-start;background:var(--sunken);border-bottom-left-radius:4px}
+.msg.sys{align-self:center;background:transparent;color:var(--muted);font-size:12px}
+.composer{display:flex;gap:8px}
+
+/* table */
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--display);font-size:24px}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr))}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(6,12,24,.55);z-index:40;display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);border-radius:18px;max-width:560px;width:100%;max-height:calc(100% - 32px);overflow:auto;padding:22px;display:flex;flex-direction:column;gap:16px;border:1px solid var(--line)}
+.modal header{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.x{border:0;background:var(--sunken);width:32px;height:32px;border-radius:50%;font-size:18px;line-height:1;flex:none}
+
+/* dila */
+.dila-fab{position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;border:0;border-radius:999px;background:var(--hero);color:var(--hero-ink);padding:8px 16px 8px 8px;display:flex;align-items:center;gap:10px;font-weight:700;box-shadow:0 8px 24px rgba(6,12,24,.25)}
+.dila-face{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#3DD68C,#145C43);display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#F4F6F2;flex:none}
+.video{aspect-ratio:16/9;max-width:100%;border-radius:12px;background:linear-gradient(135deg,#16284A,#145C43);display:grid;place-items:center;color:#F4F6F2;position:relative;overflow:hidden}
+.video .play{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center}
+.video .langs{position:absolute;left:10px;bottom:8px;font-size:11px;font-weight:700;letter-spacing:.08em}
+.video .dur{position:absolute;right:10px;bottom:8px;font-size:12px}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(70px + env(safe-area-inset-top,0px));z-index:60;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;max-width:calc(100% - 32px);box-shadow:0 8px 24px rgba(6,12,24,.25)}
+.notice{background:var(--info-soft);color:var(--info);border-radius:10px;padding:10px 12px;font-size:13px}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:14px;text-align:center;color:var(--muted);font-size:14px}
+.drop.over{border-color:var(--brand);color:var(--brand)}
+@media (prefers-reduced-motion:no-preference){.card,.btn,.chip{transition:border-color .15s,filter .15s}}
+</style>
+
+<div id="app"></div>
+
+<script>
+(() => {
+"use strict";
+/* ---------- i18n ---------- */
+const I18N = {
+ de:{journey:"Meine Journey",market:"Marktplatz",services:"Services",orders:"Aufträge",account:"Konto",role_user:"Kunde",role_partner:"Partner",role_admin:"Admin",hello:"Salom",next_step:"Jetzt dran",progress:"Fortschritt",phase:"Phase",book:"Buchen",from:"ab",days:"Tage",reviews:"Bewertungen",search:"Partner oder Leistung suchen",only_verified:"Nur Verified Pro und höher",all:"Alle",confirm_pay:"Mit SafePay bezahlen",cancel:"Abbrechen",points:"Punkte",level:"Status",redeem:"Einlösen",documents:"Dokumente",upload:"Datei hochladen",videos:"Dila Erklärvideos",ask_dila:"Frag Dila",send:"Senden",held:"In Treuhand",proof:"Wartet auf Bestätigung",released:"Ausgezahlt",release:"Bestätigen und freigeben",dispute:"Problem melden",write_review:"Bewerten",reset_demo:"Demo zurücksetzen",onb_title:"Wir erstellen deinen Weg nach Deutschland",create_journey:"Journey erstellen",restart:"Profil neu anlegen",messages:"Nachrichten",milestones:"Meilensteine",dashboard:"Übersicht",partners:"Partner",disputes:"Beschwerden",approve:"Freigeben",suspend:"Sperren",refund:"Kunde erstatten",add_service:"Leistung anlegen",save:"Speichern",lang_note:""},
+ uz:{journey:"Mening yo'lim",market:"Katalog",services:"Xizmatlar",orders:"Buyurtmalar",account:"Hisob",role_user:"Mijoz",role_partner:"Hamkor",role_admin:"Admin",hello:"Salom",next_step:"Hozir navbatda",progress:"Jarayon",phase:"Bosqich",book:"Band qilish",from:"dan",days:"kun",reviews:"sharh",search:"Hamkor yoki xizmatni qidirish",only_verified:"Faqat Verified Pro va yuqori",all:"Hammasi",confirm_pay:"SafePay orqali to'lash",cancel:"Bekor qilish",points:"Ballar",level:"Daraja",redeem:"Almashtirish",documents:"Hujjatlar",upload:"Fayl yuklash",videos:"Dila video qo'llanmalari",ask_dila:"Diladan so'rang",send:"Yuborish",held:"Omonatda",proof:"Tasdiq kutilmoqda",released:"To'langan",release:"Tasdiqlash va to'lash",dispute:"Muammo haqida xabar berish",write_review:"Baholash",reset_demo:"Demoni qayta boshlash",onb_title:"Germaniyaga yo'lingizni tuzamiz",create_journey:"Yo'lni yaratish",restart:"Profilni qayta to'ldirish",messages:"Xabarlar",milestones:"To'lov bosqichlari",dashboard:"Umumiy ko'rinish",partners:"Hamkorlar",disputes:"Shikoyatlar",approve:"Tasdiqlash",suspend:"Bloklash",refund:"Mijozga qaytarish",add_service:"Xizmat qo'shish",save:"Saqlash",lang_note:"MVP: xizmat matnlari hozircha nemis tilida. To'liq tarjima beta-versiyada."},
+ ru:{journey:"Мой путь",market:"Каталог",services:"Сервисы",orders:"Заказы",account:"Аккаунт",role_user:"Клиент",role_partner:"Партнёр",role_admin:"Админ",hello:"Салом",next_step:"Сейчас на очереди",progress:"Прогресс",phase:"Этап",book:"Заказать",from:"от",days:"дн.",reviews:"отзывов",search:"Поиск партнёра или услуги",only_verified:"Только Verified Pro и выше",all:"Все",confirm_pay:"Оплатить через SafePay",cancel:"Отмена",points:"Баллы",level:"Уровень",redeem:"Обменять",documents:"Документы",upload:"Загрузить файл",videos:"Видеоинструкции Дилы",ask_dila:"Спросить Дилу",send:"Отправить",held:"На эскроу",proof:"Ждёт подтверждения",released:"Выплачено",release:"Подтвердить и выплатить",dispute:"Сообщить о проблеме",write_review:"Оценить",reset_demo:"Сбросить демо",onb_title:"Составим ваш путь в Германию",create_journey:"Создать путь",restart:"Заполнить профиль заново",messages:"Сообщения",milestones:"Этапы оплаты",dashboard:"Обзор",partners:"Партнёры",disputes:"Жалобы",approve:"Одобрить",suspend:"Заблокировать",refund:"Вернуть клиенту",add_service:"Добавить услугу",save:"Сохранить",lang_note:"MVP: описания услуг пока на немецком. Полный перевод — в бета-версии."},
+ en:{journey:"My Journey",market:"Marketplace",services:"Services",orders:"Orders",account:"Account",role_user:"Customer",role_partner:"Partner",role_admin:"Admin",hello:"Salom",next_step:"Up next",progress:"Progress",phase:"Phase",book:"Book",from:"from",days:"days",reviews:"reviews",search:"Search partners or services",only_verified:"Verified Pro and above only",all:"All",confirm_pay:"Pay with SafePay",cancel:"Cancel",points:"Points",level:"Tier",redeem:"Redeem",documents:"Documents",upload:"Upload file",videos:"Dila explainer videos",ask_dila:"Ask Dila",send:"Send",held:"In escrow",proof:"Awaiting confirmation",released:"Paid out",release:"Confirm and release",dispute:"Report a problem",write_review:"Review",reset_demo:"Reset demo",onb_title:"Let's build your path to Germany",create_journey:"Create journey",restart:"Start profile again",messages:"Messages",milestones:"Milestones",dashboard:"Overview",partners:"Partners",disputes:"Complaints",approve:"Approve",suspend:"Suspend",refund:"Refund customer",add_service:"Add service",save:"Save",lang_note:"MVP: service descriptions are in German for now. Full translation ships with the beta."}
+};
+
+/* ---------- reference data (examples) ---------- */
+const CATS = [
+ {id:"agency",name:"Vermittlung"},{id:"language",name:"Deutschschule"},{id:"translation",name:"Übersetzung"},
+ {id:"apostille",name:"Notar & Apostille"},{id:"travel",name:"Reise & Flug"},{id:"insurance",name:"Versicherung"},
+ {id:"transfer",name:"Transfer"},{id:"relocation",name:"Relocation"}
+];
+const LEVELS = {verified:{cls:"v",label:"GTA Verified"},pro:{cls:"vp",label:"Verified Pro"},operator:{cls:"co",label:"Certified Operator"}};
+const COLORS = ["#145C43","#2358A0","#8A4B12","#6B2C5E","#0E1B33","#3F5E1A","#1E6B78","#7A2E2E"];
+
+function seedPartners(){ return [
+ {id:"p4",name:"EuroWork Bridge",cat:"agency",city:"Taschkent · Dortmund",level:"operator",status:"active",rating:4.9,count:56,trust:96,since:2019,langs:"UZ · RU · DE",
+  about:"Vermittlung von Berufskraftfahrern und Pflege-Azubis an geprüfte Arbeitgeber in NRW. Keine Gebühren ohne Vertrag.",
+  services:[{id:"s41",name:"Vermittlung Berufskraftfahrer CE",price:1500,days:90,ms:[["Anzahlung",20],["Dokumentenphase",30],["Arbeitgeber-Interview",30],["Visum erteilt",20]]},
+            {id:"s42",name:"Vermittlung Ausbildung Pflege",price:1200,days:120,ms:[["Anzahlung",20],["Dokumentenphase",30],["Ausbildungsvertrag",30],["Visum erteilt",20]]}]},
+ {id:"p2",name:"Toshkent Translate Office",cat:"translation",city:"Taschkent",level:"verified",status:"active",rating:4.7,count:312,trust:91,since:2016,langs:"UZ · RU · DE · EN",
+  about:"Vereidigte Übersetzungen für Urkunden, Diplome und Führerscheine. Anerkannt von der Deutschen Botschaft Taschkent.",
+  services:[{id:"s21",name:"Übersetzung Diplom mit Beilage",price:60,days:3},{id:"s22",name:"Übersetzung Führerschein",price:45,days:2},{id:"s23",name:"Übersetzung Geburts- oder Heiratsurkunde",price:40,days:2}]},
+ {id:"p3",name:"Apostil Markazi",cat:"apostille",city:"Taschkent",level:"verified",status:"active",rating:4.5,count:88,trust:87,since:2018,langs:"UZ · RU",
+  about:"Apostille und notarielle Beglaubigung. Abholung und Rückversand in ganz Usbekistan.",
+  services:[{id:"s31",name:"Apostille für ein Dokument",price:35,days:5},{id:"s32",name:"Notarielle Beglaubigung (3 Kopien)",price:20,days:1}]},
+ {id:"p1",name:"Samarkand Lingua",cat:"language",city:"Samarkand · online",level:"pro",status:"active",rating:4.8,count:124,trust:94,since:2015,langs:"UZ · RU · DE",
+  about:"Intensivkurse A1 bis B2, lizenziertes Prüfungszentrum. Kleine Gruppen, Abendkurse und online.",
+  services:[{id:"s11",name:"Intensivkurs A1 bis A2 (8 Wochen)",price:390,days:56,ms:[["Kursstart",50],["Halbzeit",50]]},{id:"s12",name:"Prüfungsvorbereitung B1",price:180,days:21}]},
+ {id:"p9",name:"Deutsch Plus Online",cat:"language",city:"online",level:"verified",status:"active",rating:4.3,count:41,trust:82,since:2021,langs:"RU · DE",
+  about:"Online-Sprachkurse mit Muttersprachlern, flexible Termine.",services:[{id:"s91",name:"Einzelunterricht 10 Stunden",price:220,days:30}]},
+ {id:"p5",name:"SilkWay Travel",cat:"travel",city:"Taschkent",level:"verified",status:"active",rating:4.6,count:203,trust:89,since:2012,langs:"UZ · RU · EN",
+  about:"Flüge Taschkent–Deutschland, Gepäckberatung und das Ready-for-Germany-Paket.",
+  services:[{id:"s51",name:"Flug TAS → DUS inkl. 30 kg",price:289,days:1},{id:"s52",name:"Ready-for-Germany-Paket (Checkliste, eSIM, Beratung)",price:49,days:2}]},
+ {id:"p7",name:"Airport Transfer NRW",cat:"transfer",city:"Düsseldorf",level:"verified",status:"active",rating:4.8,count:77,trust:90,since:2020,langs:"RU · DE",
+  about:"Abholung am Flughafen mit russischsprachigem Fahrer bis zur ersten Unterkunft.",services:[{id:"s71",name:"Transfer DUS → Dortmund",price:79,days:1}]},
+ {id:"p6",name:"Ruhr Relocation",cat:"relocation",city:"Dortmund",level:"pro",status:"active",rating:4.8,count:65,trust:93,since:2017,langs:"UZ · RU · DE",
+  about:"Begleitung zur Wohnsitzanmeldung, Kontoeröffnung und Wohnungssuche im Ruhrgebiet.",
+  services:[{id:"s61",name:"Begleitung Anmeldung und Bankkonto",price:89,days:7},{id:"s62",name:"Wohnungssuche (Erfolgshonorar)",price:490,days:45,ms:[["Suchauftrag",30],["Mietvertrag",70]]}]},
+ {id:"p8",name:"InsurBridge Makler",cat:"insurance",city:"Köln · online",level:"pro",status:"active",rating:4.6,count:39,trust:92,since:2014,langs:"RU · DE",
+  about:"Versicherungsmakler mit Erlaubnis nach § 34d GewO. Beratung zu Kranken-, Haftpflicht- und Reiseversicherung.",
+  services:[{id:"s81",name:"Beratung Krankenversicherung für Visum",price:0,days:2},{id:"s82",name:"Reisekrankenversicherung 90 Tage",price:69,days:1}]},
+ {id:"p10",name:"FastVisa Express",cat:"agency",city:"Taschkent",level:"verified",status:"pending",rating:0,count:0,trust:0,since:2026,langs:"UZ",
+  about:"Antrag auf Aufnahme. Verspricht Visum in 10 Tagen.",flags:["Keine Handelsregister-Nummer","Verspricht garantiertes Visum","Nur Barzahlung angeboten"],services:[{id:"s101",name:"Visa-Garantie",price:900,days:10}]},
+ {id:"p11",name:"Nur Tarjima",cat:"translation",city:"Buxoro",level:"verified",status:"suspended",rating:3.1,count:22,trust:48,since:2020,langs:"UZ",
+  about:"Status entzogen: Beschwerdequote 18 %, 4 nicht erfüllte Aufträge.",services:[{id:"s111",name:"Übersetzung Urkunde",price:25,days:3}]}
+];}
+
+const PHASES = ["Identität prüfen","Dokumente vorbereiten","Übersetzung & Apostille","Sprache & Qualifikation","Visum","Reise","Ankunft","Leben in Deutschland"];
+
+function buildJourney(p){
+ const T=(t,cat,note)=>({id:Math.random().toString(36).slice(2,9),t,cat:cat||null,note:note||"",done:false});
+ const driver=/fahrer|kraft|lkw|driver/i.test(p.job);
+ const ph=[
+  [T("Konto verifizieren: Reisepass hochladen",null,"Identitätsprüfung schützt dich und die Partner."),T("Profil vervollständigen")],
+  [T("Reisepass mindestens 12 Monate gültig?"),T("Diplome und Zeugnisse sammeln"),p.contract?T("Arbeitsvertrag hochladen"):T("Passenden Arbeitgeber finden","agency","Nur Agenturen mit GTA-Verified-Status."),...(driver?[T("Führerschein Klasse CE kopieren")]:[])],
+  [T("Diplom übersetzen lassen","translation"),T("Apostille für Diplom","apostille"),...(driver?[T("Führerschein übersetzen lassen","translation")]:[]),...(p.married?[T("Heiratsurkunde übersetzen","translation")]:[])],
+  [T("Deutsch A2 nachweisen","language","Für viele Arbeitsvisa reicht A2, für Pflege meist B1."),T(p.goal==="Ausbildung"?"Ausbildungsvertrag prüfen lassen":"Berufsanerkennung klären","agency")],
+  [T("Termin bei der Deutschen Botschaft Taschkent buchen",null,"Termine sind knapp. Früh planen."),T("Krankenversicherung für das Visum","insurance"),T("Visumsunterlagen vollständig")],
+  [T("Flug buchen","travel"),T("eSIM vor Abflug aktivieren",null,"Siehe Services → SIM & eSIM."),T("Transfer vom Flughafen","transfer"),T("Ready-for-Germany-Checkliste abhaken","travel")],
+  [T(`Wohnsitz in ${p.city} anmelden (innerhalb von 14 Tagen)`,"relocation"),T("Bankkonto eröffnen","relocation"),T("Gesetzliche Krankenkasse wählen","insurance"),T("Deutschlandticket holen",null,"63 € pro Monat, bundesweit Nahverkehr.")],
+  [T("Privathaftpflicht abschließen","insurance"),T("Steuer-ID abwarten und dem Arbeitgeber geben"),...(driver?[T("Führerschein umschreiben lassen")]:[]),...(p.married?[T("Familiennachzug vorbereiten","agency")]:[]),T("Deutschkurs B1 fortsetzen","language")]
+ ];
+ return ph.map((tasks,i)=>({name:PHASES[i],tasks}));
+}
+
+function seedState(){
+ const profile={name:"Bekzod",age:31,country:"Usbekistan",job:"Berufskraftfahrer",goal:"Arbeit",city:"Dortmund",contract:true,married:true,visa:false};
+ const journey=buildJourney(profile);
+ journey[0].tasks.forEach(t=>t.done=true); journey[1].tasks.forEach(t=>t.done=true); journey[2].tasks[0].done=true;
+ return {
+  v:3, lang:"de", role:"user", view:"journey", onboarded:true, profile, journey, selPhase:null,
+  points:1850, earned:[["Buchung Übersetzung Diplom",60],["Phase 1 abgeschlossen",100],["Phase 2 abgeschlossen",100],["Bewertung Apostil Markazi",50],["Freund geworben: Dilnoza",500],["Vermittlungspaket EuroWork",1040]],
+  partners:seedPartners(),
+  docs:[{n:"Reisepass.pdf",s:"geprüft"},{n:"Diplom_Kasb-hunar.pdf",s:"geprüft"},{n:"Fuehrerschein_CE.jpg",s:"geprüft"},{n:"Arbeitsvertrag_Spedition.pdf",s:"hochgeladen"},{n:"Diplom_Uebersetzung_DE.pdf",s:"vom Partner"}],
+  orders:[
+   {id:"GTA-10482",pid:"p4",title:"Vermittlung Berufskraftfahrer CE",price:1500,created:"2026-07-12",customer:"Bekzod",dispute:false,reviewed:false,
+    ms:[{l:"Anzahlung",a:300,s:"released"},{l:"Dokumentenphase",a:450,s:"released"},{l:"Arbeitgeber-Interview",a:450,s:"proof"},{l:"Visum erteilt",a:300,s:"held"}],
+    docs:["Interview-Protokoll_Spedition-Ruhr.pdf"],
+    msgs:[{f:"them",t:"Das Interview mit Spedition Ruhr GmbH war erfolgreich. Protokoll ist hochgeladen. Bitte Meilenstein 3 bestätigen."},{f:"me",t:"Rahmat! Ich schaue es mir heute an."}]},
+   {id:"GTA-10517",pid:"p2",title:"Übersetzung Diplom mit Beilage",price:60,created:"2026-09-22",customer:"Bekzod",dispute:false,reviewed:false,
+    ms:[{l:"Leistung",a:60,s:"held"}],docs:[],msgs:[{f:"them",t:"Wir haben Ihr Diplom erhalten. Lieferung bis Donnerstag."}]},
+   {id:"GTA-10391",pid:"p3",title:"Apostille für ein Dokument",price:35,created:"2026-06-30",customer:"Bekzod",dispute:false,reviewed:true,
+    ms:[{l:"Leistung",a:35,s:"released"}],docs:["Apostille_Diplom.pdf"],msgs:[]},
+   {id:"GTA-10466",pid:"p1",title:"Intensivkurs A1 bis A2 (8 Wochen)",price:390,created:"2026-08-02",customer:"Madina R.",dispute:true,reviewed:false,disputeText:"Kurs fand zweimal nicht statt, keine Ersatztermine.",
+    ms:[{l:"Kursstart",a:195,s:"released"},{l:"Halbzeit",a:195,s:"held"}],docs:[],msgs:[]}
+  ],
+  reviews:[
+   {pid:"p2",by:"Dilshod T.",stars:5,text:"Schnell und von der Botschaft ohne Rückfrage akzeptiert.",ok:true},
+   {pid:"p2",by:"Olga K.",stars:4,text:"Gute Qualität, Abholung hat einen Tag länger gedauert.",ok:true},
+   {pid:"p4",by:"Sardor M.",stars:5,text:"Jeder Schritt transparent, Geld erst nach Leistung. So muss das sein.",ok:true},
+   {pid:"p1",by:"Nilufar A.",stars:5,text:"Sehr gute Lehrerin, habe A2 beim ersten Versuch bestanden.",ok:true},
+   {pid:"p3",by:"Bekzod",stars:4,text:"Hat geklappt, Kommunikation nur auf Russisch.",ok:true},
+   {pid:"p6",by:"Aziz R.",stars:5,text:"Termin beim Bürgeramt in 5 Tagen bekommen, Begleitung war super.",ok:true},
+   {pid:"p9",by:"Anonym",stars:1,text:"Schreibt mir auf WhatsApp, ich soll direkt bar zahlen, dann billiger!!",ok:null}
+  ],
+  dila:[{f:"them",t:"Salom Bekzod! Ich bin Dila. Frag mich zum Beispiel: Was fehlt mir noch?"}],
+  redeemed:[]
+ };
+}
+
+/* ---------- state ---------- */
+const KEY="gta-one-mvp";
+let S;
+try{ S=JSON.parse(localStorage.getItem(KEY)); }catch(e){ S=null; }
+if(!S||S.v!==3) S=seedState();
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} };
+let modal=null, toastMsg=null, toastTimer=null, ui={cat:"all",q:"",pro:false,orderId:null,partnerId:null,svcTab:"exchange",acct:"points",adminTab:"partners",dilaOpen:false,amount:500,dir:"eur"};
+
+const t=k=>I18N[S.lang]?.[k]??I18N.de[k]??k;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const eur=n=>new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR",maximumFractionDigits:n%1?2:0}).format(n);
+const fromPrice=n=>S.lang==="uz"?`${eur(n)} ${t("from")}`:`${t("from")} ${eur(n)}`;
+const P=id=>S.partners.find(p=>p.id===id);
+const initials=n=>n.split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+const colorFor=id=>COLORS[[...id].reduce((a,c)=>a+c.charCodeAt(0),0)%COLORS.length];
+const tier=p=>p>=5000?"Gold":p>=1500?"Silber":"Bronze";
+function toast(m){ toastMsg=m; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{toastMsg=null;render();},2600); }
+function addPoints(n,why){ S.points+=n; S.earned.unshift([why,n]); }
+
+const ICON={
+ journey:'<path d="M4 19c4 0 4-6 8-6s4 6 8 6M12 13V5m0 0 3 3m-3-3L9 8"/>',
+ market:'<path d="M4 9h16l-1 11H5L4 9Zm4 0V7a4 4 0 0 1 8 0v2"/>',
+ services:'<path d="M4 6h16M4 12h16M4 18h10"/>',
+ orders:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Zm3 5h6m-6 4h6"/>',
+ account:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+ check:'<path d="m5 12 4 4 10-10"/>',
+ shield:'<path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+ play:'<path d="M8 5v14l11-7L8 5Z" fill="currentColor"/>',
+ star:'<path d="m12 3 2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9L12 3Z" fill="currentColor" stroke="none"/>'
+};
+const ico=(n,s=18)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
+const badge=p=>`<span class="pill ${LEVELS[p.level].cls}">${ico("shield",13)}${LEVELS[p.level].label}</span>`;
+const stars=r=>`<span class="stars">★ ${r.toFixed(1).replace(".",",")}</span>`;
+
+/* ---------- journey helpers ---------- */
+const phaseDone=ph=>ph.tasks.every(x=>x.done);
+const curPhase=()=>{ const i=S.journey.findIndex(ph=>!phaseDone(ph)); return i<0?S.journey.length-1:i; };
+const progress=()=>{ const all=S.journey.flatMap(p=>p.tasks); return Math.round(100*all.filter(x=>x.done).length/all.length); };
+
+/* ---------- views: customer ---------- */
+function vJourney(){
+ if(!S.onboarded) return vOnboarding();
+ const ci=curPhase(), sel=S.selPhase??ci, ph=S.journey[sel], cur=S.journey[ci];
+ const open=cur.tasks.filter(x=>!x.done);
+ const nextCat=open.find(x=>x.cat)?.cat;
+ const recs=nextCat?S.partners.filter(p=>p.cat===nextCat&&p.status==="active").sort((a,b)=>b.trust-a.trust).slice(0,3):[];
+ const pr=progress();
+ return `
+ <section class="hero">
+  <div style="display:flex;flex-direction:column;gap:14px">
+   <p class="eyebrow">${t("journey")} · ${esc(S.profile.country)} → ${esc(S.profile.city)}</p>
+   <h1>${t("hello")}, ${esc(S.profile.name)}. ${t("phase")} ${ci+1} von 8: ${esc(cur.name)}</h1>
+   <p class="muted">${esc(S.profile.job)} · ${esc(S.profile.goal)} · ${S.profile.contract?"Arbeitsvertrag vorhanden":"noch kein Vertrag"} · ${S.profile.married?"verheiratet":"ledig"}</p>
+   <div style="display:flex;flex-direction:column;gap:6px;max-width:420px">
+    <div class="row small" style="justify-content:space-between"><span>${t("progress")}</span><b class="num">${pr} %</b></div>
+    <div class="meter" role="progressbar" aria-valuenow="${pr}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pr}%"></span></div>
+   </div>
+  </div>
+  <div class="now">
+   <p class="eyebrow" style="color:#E8B84A">${t("next_step")}</p>
+   ${open.slice(0,3).map(x=>`<p><b>${esc(x.t)}</b>${x.note?`<br><span class="muted small">${esc(x.note)}</span>`:""}</p>`).join("")||"<p>Alles erledigt. Willkommen in Deutschland!</p>"}
+   ${nextCat?`<div class="row"><button class="btn gold sm" data-a="goCat" data-v="${nextCat}">${recs.length} geprüfte Partner ansehen</button><button class="btn sm" data-a="dila">${t("ask_dila")}</button></div>`:""}
+  </div>
+ </section>
+
+ <section class="section">
+  <div class="rail" role="list">
+   ${S.journey.map((p,i)=>`<button role="listitem" class="step ${phaseDone(p)?"done":i===ci?"cur":""}" aria-pressed="${i===sel}" data-a="phase" data-v="${i}"><b>${phaseDone(p)?ico("check",16):i+1}</b><span>${esc(p.name)}</span></button>`).join("")}
+  </div>
+ </section>
+
+ <section class="grid2">
+  <div class="card">
+   <div class="section-head"><div><p class="eyebrow">${t("phase")} ${sel+1}</p><h2>${esc(ph.name)}</h2></div><span class="pill ${phaseDone(ph)?"ok":sel===ci?"warn":"neutral"}">${ph.tasks.filter(x=>x.done).length}/${ph.tasks.length} erledigt</span></div>
+   <div>
+   ${ph.tasks.map(x=>`<div class="task ${x.done?"is-done":""}"><input type="checkbox" id="task-${x.id}" data-a="task" data-v="${x.id}" ${x.done?"checked":""}><div class="body"><label for="task-${x.id}" class="t"><b>${esc(x.t)}</b></label>${x.note?`<span class="muted small">${esc(x.note)}</span>`:""}${x.cat&&!x.done?`<span><button class="link small" data-a="goCat" data-v="${x.cat}">Geprüfte Anbieter: ${esc(CATS.find(c=>c.id===x.cat).name)} →</button></span>`:""}</div></div>`).join("")}
+   </div>
+   <p class="muted small">Jede abgeschlossene Phase bringt +100 ${t("points")}.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+   ${recs.length?`<div class="card"><div class="section-head"><h2>Empfohlen für diesen Schritt</h2><span class="sample">Beispiel</span></div>${recs.map(pRow).join("")}</div>`:""}
+   <div class="card">
+    <div class="row" style="align-items:flex-start"><div class="dila-face">D</div><div style="flex:1;min-width:0"><h3>Dila erklärt: ${sel<=2?"Wie läuft eine Apostille ab?":sel<=5?"Was brauche ich am Flughafen?":"Wie funktioniert die Anmeldung?"}</h3><p class="muted small">3 Minuten · Usbekisch, Russisch, Deutsch, Englisch</p></div></div>
+    <button class="btn" data-a="acct" data-v="videos">${ico("play",14)} Video ansehen</button>
+   </div>
+  </div>
+ </section>`;
+}
+const pRow=p=>`<button class="card pcard" style="box-shadow:none;padding:12px" data-a="partner" data-v="${p.id}"><div class="row" style="flex-wrap:nowrap"><div class="avatar" style="background:${colorFor(p.id)}">${initials(p.name)}</div><div style="flex:1;min-width:0"><h3>${esc(p.name)}</h3><p class="small muted">${esc(p.city)} · ${stars(p.rating)} (${p.count})</p></div><span class="small num"><b>${fromPrice(Math.min(...p.services.map(s=>s.price)))}</b></span></div></button>`;
+
+function vOnboarding(){
+ const p=S.profile;
+ return `<section class="card" style="max-width:720px;margin:0 auto;width:100%">
+  <p class="eyebrow">${t("journey")}</p><h1>${t("onb_title")}</h1>
+  <p class="muted">8 Fragen, 1 Minute. Danach zeigt dir GTA ONE nur die Schritte und Partner, die du wirklich brauchst.</p>
+  <form id="onb" class="form">
+   <label class="f">Vorname<input type="text" id="o-name" name="name" value="${esc(p.name)}" required></label>
+   <label class="f">Alter<input type="number" id="o-age" name="age" min="16" max="70" value="${p.age}"></label>
+   <label class="f">Herkunftsland<select id="o-country" name="country">${["Usbekistan","Kasachstan","Kirgisistan","Tadschikistan","Turkmenistan"].map(c=>`<option ${c===p.country?"selected":""}>${c}</option>`).join("")}</select></label>
+   <label class="f">Ziel<select id="o-goal" name="goal">${["Arbeit","Ausbildung","Studium","Chancenkarte","Familiennachzug"].map(c=>`<option ${c===p.goal?"selected":""}>${c}</option>`).join("")}</select></label>
+   <label class="f">Beruf<input type="text" id="o-job" name="job" value="${esc(p.job)}"></label>
+   <label class="f">Zielort in Deutschland<input type="text" id="o-city" name="city" value="${esc(p.city)}"></label>
+   <label class="f">Arbeits- oder Ausbildungsvertrag?<select id="o-contract" name="contract"><option value="1" ${p.contract?"selected":""}>Ja, vorhanden</option><option value="0" ${!p.contract?"selected":""}>Nein, noch nicht</option></select></label>
+   <label class="f">Familienstand<select id="o-married" name="married"><option value="1" ${p.married?"selected":""}>Verheiratet</option><option value="0" ${!p.married?"selected":""}>Ledig</option></select></label>
+   <div style="grid-column:1/-1" class="row"><button class="btn primary" type="submit">${t("create_journey")}</button><span class="muted small">Beispielprofil vorausgefüllt</span></div>
+  </form></section>`;
+}
+
+function vMarket(){
+ if(ui.partnerId) return vPartner(P(ui.partnerId));
+ const q=ui.q.trim().toLowerCase();
+ const list=S.partners.filter(p=>p.status==="active"&&(ui.cat==="all"||p.cat===ui.cat)&&(!ui.pro||p.level!=="verified")&&(!q||(p.name+" "+p.services.map(s=>s.name).join(" ")+" "+p.city).toLowerCase().includes(q))).sort((a,b)=>b.trust-a.trust);
+ return `<section class="section">
+  <div class="section-head"><div><p class="eyebrow">GTA Verified Marketplace</p><h1>${t("market")}</h1></div><span class="sample">Beispielpartner</span></div>
+  <div class="card" style="gap:12px">
+   <input type="search" id="q" placeholder="${t("search")}" value="${esc(ui.q)}" aria-label="${t("search")}">
+   <div class="row" style="gap:6px">${[{id:"all",name:t("all")},...CATS].map(c=>`<button class="chip" data-a="cat" data-v="${c.id}" aria-pressed="${ui.cat===c.id}">${esc(c.name)}</button>`).join("")}</div>
+   <label class="row small" style="gap:8px"><input type="checkbox" id="pro" data-a="pro" ${ui.pro?"checked":""}> ${t("only_verified")}</label>
+  </div>
+  <p class="muted small">Sortiert nach GTA Trust Score. Nur geprüfte Partner, Bewertungen nur aus echten Buchungen.</p>
+  <div class="grid">${list.map(p=>`
+   <button class="card pcard" data-a="partner" data-v="${p.id}">
+    <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="avatar" style="background:${colorFor(p.id)}">${initials(p.name)}</div><div style="flex:1;min-width:0"><h3>${esc(p.name)}</h3><p class="small muted">${esc(CATS.find(c=>c.id===p.cat).name)} · ${esc(p.city)}</p></div></div>
+    <div class="row" style="gap:8px">${badge(p)}<span class="small">${stars(p.rating)} <span class="muted">(${p.count} ${t("reviews")})</span></span></div>
+    <p class="small muted">${esc(p.about)}</p>
+    <div class="row" style="justify-content:space-between;margin-top:auto"><span class="small muted">${esc(p.langs)}</span><b class="num">${fromPrice(Math.min(...p.services.map(s=>s.price)))}</b></div>
+   </button>`).join("")||`<p class="muted">Keine Partner für diese Auswahl.</p>`}</div>
+ </section>`;
+}
+
+function vPartner(p){
+ const rv=S.reviews.filter(r=>r.pid===p.id&&r.ok);
+ return `<section class="section">
+  <div><button class="link" data-a="back">← ${t("market")}</button></div>
+  <div class="grid2">
+   <div class="card">
+    <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="avatar" style="background:${colorFor(p.id)};width:56px;height:56px">${initials(p.name)}</div><div style="flex:1;min-width:0"><h1 style="font-size:24px">${esc(p.name)}</h1><p class="muted">${esc(CATS.find(c=>c.id===p.cat).name)} · ${esc(p.city)}</p></div></div>
+    <div class="row">${badge(p)}<span>${stars(p.rating)} <span class="muted small">(${p.count} ${t("reviews")})</span></span></div>
+    <p>${esc(p.about)}</p>
+    <dl class="kv"><dt>Sprachen</dt><dd>${esc(p.langs)}</dd><dt>Auf GTA seit</dt><dd>${p.since}</dd><dt>Geprüft</dt><dd>Registrierung, Inhaber, Adresse, Bankdaten${p.level!=="verified"?", Lizenzen, AGB, Preise":""}</dd><dt>Trust Score</dt><dd class="num">${p.trust} / 100</dd></dl>
+    <div>${p.services.map(s=>`<div class="svc"><div style="min-width:0;flex:1"><b>${esc(s.name)}</b><p class="small muted">${s.days} ${t("days")}${s.ms?` · ${s.ms.length} ${t("milestones")}`:""} · SafePay</p></div><div class="row"><b class="num">${s.price?eur(s.price):"kostenlos"}</b><button class="btn primary sm" data-a="book" data-v="${p.id}|${s.id}">${t("book")}</button></div></div>`).join("")}</div>
+   </div>
+   <div class="card">
+    <div class="section-head"><h2>${t("reviews")}</h2><span class="pill ok">${ico("check",13)} Verified Purchase</span></div>
+    ${rv.map(r=>`<div style="border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:4px"><div class="row" style="justify-content:space-between"><b>${esc(r.by)}</b><span class="stars">${"★".repeat(r.stars)}<span class="muted">${"★".repeat(5-r.stars)}</span></span></div><p class="small">${esc(r.text)}</p></div>`).join("")||`<p class="muted">Noch keine Bewertungen aus Buchungen.</p>`}
+   </div>
+  </div></section>`;
+}
+
+function bookingModal(pid,sid){
+ const p=P(pid), s=p.services.find(x=>x.id===sid);
+ const ms=s.ms||[["Leistung",100]];
+ const maxDisc=Math.min(Math.floor(S.points/100),Math.floor(s.price*0.1));
+ const disc=ui.usePts?maxDisc:0;
+ return `<header><div><p class="eyebrow">GTA SafePay</p><h2>${esc(s.name)}</h2><p class="muted small">${esc(p.name)}</p></div><button class="x" data-a="close" aria-label="Schließen">×</button></header>
+ <dl class="kv"><dt>Vertragspartner</dt><dd>${esc(p.name)} ${badge(p)}</dd><dt>Lieferzeit</dt><dd>${s.days} ${t("days")}</dd><dt>Preis</dt><dd class="num">${eur(s.price)}</dd></dl>
+ <div><p class="small" style="font-weight:700;margin-bottom:4px">${t("milestones")}</p><div class="ms">${ms.map(([l,pc],i)=>`<div class="ms-row"><span class="dot held"></span><span>${i+1}. ${esc(l)}</span><b class="num">${eur(Math.round(s.price*pc/100))}</b></div>`).join("")}</div></div>
+ <div class="notice">${ico("lock",14)} Dein Geld liegt beim regulierten Zahlungsdienstleister in Treuhand. Der Partner erhält jeden Betrag erst, wenn du den Meilenstein bestätigst. Bei Problemen friert GTA die Zahlung ein.</div>
+ ${maxDisc>0?`<label class="row small"><input type="checkbox" id="usePts" data-a="usePts" ${ui.usePts?"checked":""}> ${maxDisc*100} ${t("points")} einlösen (−${eur(maxDisc)})</label>`:""}
+ <div class="row" style="justify-content:space-between"><span class="muted">Zu zahlen</span><b class="num" style="font-size:22px">${eur(s.price-disc)}</b></div>
+ <p class="muted small">+${s.price-disc} ${t("points")} für diese Buchung · Zahlung im Prototyp simuliert</p>
+ <div class="row" style="justify-content:flex-end"><button class="btn" data-a="close">${t("cancel")}</button><button class="btn primary" data-a="pay" data-v="${pid}|${sid}">${ico("lock",14)} ${t("confirm_pay")}</button></div>`;
+}
+
+const SVC_TABS=[["exchange","Geld & Wechsel"],["sim","SIM & eSIM"],["rail","Bahn & Mobilität"],["insurance","Versicherung & Bank"],["local","Lokale Anbieter"]];
+function vServices(){
+ return `<section class="section">
+  <div class="section-head"><div><p class="eyebrow">Life-Services</p><h1>${t("services")}</h1></div><span class="sample">Beispielwerte</span></div>
+  <div class="row" style="gap:6px">${SVC_TABS.map(([k,n])=>`<button class="chip" data-a="svcTab" data-v="${k}" aria-pressed="${ui.svcTab===k}">${n}</button>`).join("")}</div>
+  ${({exchange:svcExchange,sim:svcSim,rail:svcRail,insurance:svcIns,local:svcLocal})[ui.svcTab]()}
+  <p class="muted small">Affiliate-Hinweis: Bei Abschluss über GTA ONE kann GTA eine Vergütung vom Anbieter erhalten. Der Preis für dich ändert sich dadurch nicht.</p>
+ </section>`;
+}
+function svcExchange(){
+ const offers=[{n:"Anbieter A (Online-Transfer)",rate:14120,fee:1.99,time:"Minuten"},{n:"Anbieter B (Bank-SWIFT)",rate:13870,fee:15,time:"1–3 Tage"},{n:"Anbieter C (Karte zu Karte)",rate:14010,fee:0,time:"Minuten"}];
+ const amt=Math.max(0,+ui.amount||0);
+ const rows=offers.map(o=>({...o,get:ui.dir==="eur"?Math.round((amt-o.fee)*o.rate):+(Math.max(0,amt/o.rate-o.fee)).toFixed(2)})).sort((a,b)=>b.get-a.get);
+ const fmt=v=>ui.dir==="eur"?new Intl.NumberFormat("de-DE").format(Math.max(0,v))+" UZS":eur(v);
+ return `<div class="grid2"><div class="card">
+  <h2>Geld nach Hause senden</h2>
+  <div class="form"><label class="f">Betrag<input type="number" id="amt" min="0" value="${amt}"></label>
+  <label class="f">Richtung<select id="dir"><option value="eur" ${ui.dir==="eur"?"selected":""}>EUR → UZS</option><option value="uzs" ${ui.dir==="uzs"?"selected":""}>UZS → EUR</option></select></label></div>
+  <div class="tbl-wrap"><table><tr><th>Anbieter</th><th>Gebühr</th><th>Dauer</th><th style="text-align:right">Empfänger erhält</th></tr>
+  ${rows.map((o,i)=>`<tr><td>${esc(o.n)} ${i===0?'<span class="pill ok">Bester Kurs</span>':""}</td><td class="num">${eur(o.fee)}</td><td>${o.time}</td><td class="num" style="text-align:right"><b>${fmt(o.get)}</b></td></tr>`).join("")}</table></div>
+  <p class="muted small">Beispielkurse, nicht live. Im Produkt: Kurse per Partner-API, Transfer beim lizenzierten Zahlungsdienst.</p>
+ </div>
+ <div class="card"><h2>So vermeidest du Verluste</h2><ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px"><li>Vergleiche den Endbetrag, nicht nur die Gebühr.</li><li>Keine Bargeld-Kuriere und keine privaten Telegram-Wechsler.</li><li>Große Beträge: Nachweis für Bank und Finanzamt aufbewahren.</li></ul><button class="btn" data-a="dilaAsk" data-v="Wie sende ich Geld nach Usbekistan?">${t("ask_dila")}</button></div></div>`;
+}
+function svcSim(){
+ const tariffs=[["eSIM Start",10,"9,99 €","Prepaid, sofort aktiv, keine Schufa"],["Allnet 25",25,"14,99 €","monatlich kündbar, EU-Roaming"],["Allnet 50 + Ausland",50,"24,99 €","inkl. 300 Min. nach Usbekistan"]];
+ return `<div class="grid2"><div class="card"><h2>Tarife vergleichen</h2>
+  ${tariffs.map(([n,gb,p,d])=>`<div class="svc"><div style="flex:1;min-width:0"><b>${n}</b> · ${gb} GB<p class="small muted">${d}</p></div><div class="row"><b class="num">${p}</b><button class="btn primary sm" data-a="affiliate" data-v="${n}">Wählen</button></div></div>`).join("")}</div>
+  <div class="card"><h2>eSIM in 4 Schritten aktivieren</h2><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px"><li>Tarif wählen und Reisepass per Video-Ident bestätigen.</li><li>QR-Code kommt per E-Mail, noch in Usbekistan.</li><li>Einstellungen → Mobilfunk → eSIM hinzufügen → QR scannen.</li><li>Nach der Landung Datenroaming einschalten. Fertig.</li></ol><button class="btn" data-a="acct" data-v="videos">${ico("play",14)} Dila-Video: SIM aktivieren</button></div></div>`;
+}
+function svcRail(){
+ return `<div class="grid2"><div class="card"><h2>Deutschlandticket</h2><p>Bundesweit Bus, S-Bahn, U-Bahn und Regionalzug. <b class="num">63 €</b> pro Monat, monatlich kündbar. Viele Arbeitgeber zahlen einen Zuschuss.</p><div class="row"><button class="btn primary" data-a="affiliate" data-v="Deutschlandticket">Deutschlandticket holen</button><button class="btn" data-a="redeemGo">Mit ${t("points")} bezuschussen</button></div></div>
+ <div class="card"><h2>Fernverkehr & Transfer</h2><div class="svc"><div><b>Düsseldorf Flughafen → Dortmund</b><p class="small muted">Regionalexpress, ca. 55 Min.</p></div><b class="num">im D-Ticket</b></div><div class="svc"><div><b>Dortmund → Berlin</b><p class="small muted">ICE, Sparpreis</p></div><b class="num">${fromPrice(29.99)}</b></div><div class="svc"><div><b>Abholung mit Fahrer</b><p class="small muted">Airport Transfer NRW · GTA Verified</p></div><button class="btn sm" data-a="partner" data-v="p7">Ansehen</button></div></div></div>`;
+}
+function svcIns(){
+ return `<div class="grid2"><div class="card"><h2>Versicherungen</h2>
+ ${[["Krankenversicherung für das Visum","Pflicht bis zum Arbeitsbeginn"],["Gesetzliche Krankenkasse","Pflicht ab Arbeitsbeginn, Arbeitgeber zahlt die Hälfte"],["Privathaftpflicht","Sehr empfohlen, ab ca. 5 € im Monat"]].map(([n,d])=>`<div class="svc"><div style="flex:1;min-width:0"><b>${n}</b><p class="small muted">${d}</p></div><button class="btn sm" data-a="partner" data-v="p8">Beratung</button></div>`).join("")}
+ <p class="muted small">Beratung und Abschluss durch InsurBridge Makler (Erlaubnis nach § 34d GewO). GTA ONE vermittelt nur den Kontakt.</p></div>
+ <div class="card"><h2>Bankkonto</h2><div class="svc"><div style="flex:1;min-width:0"><b>Online-Konto ohne Meldebescheinigung</b><p class="small muted">Eröffnung mit Reisepass, IBAN sofort</p></div><button class="btn primary sm" data-a="affiliate" data-v="Online-Konto">Eröffnen</button></div><div class="svc"><div style="flex:1;min-width:0"><b>Filialbank mit russischsprachiger Beratung</b><p class="small muted">Termin über Ruhr Relocation</p></div><button class="btn sm" data-a="partner" data-v="p6">Termin</button></div></div></div>`;
+}
+function svcLocal(){
+ const L=[["Bürgeramt-Begleitung","Dortmund","UZ, RU","Ruhr Relocation"],["Russischsprachige Hausärztin","Dortmund","RU","Praxis (Beispiel)"],["Usbekischer Lebensmittelladen","Dortmund","UZ, RU","Community-Tipp"],["Steuerberatung für Arbeitnehmer","Bochum","RU, DE","Kanzlei (Beispiel)"],["Fahrschule Führerschein-Umschreibung","Essen","RU","Fahrschule (Beispiel)"],["Vatandoshlar Community-Treffen","NRW","UZ","Diaspora-Verein"]];
+ return `<div class="card"><h2>In der Nähe von ${esc(S.profile.city)}</h2><div class="tbl-wrap"><table><tr><th>Angebot</th><th>Ort</th><th>Sprache</th><th>Anbieter</th></tr>${L.map(r=>`<tr>${r.map((c,i)=>`<td>${i===0?`<b>${c}</b>`:c}</td>`).join("")}</tr>`).join("")}</table></div><p class="muted small">Community-Tipps sind nicht geprüft und klar als solche gekennzeichnet.</p></div>`;
+}
+
+function orderState(o){ if(o.dispute) return ["bad","Beschwerde offen"]; if(o.ms.every(m=>m.s==="released")) return ["ok","Abgeschlossen"]; if(o.ms.some(m=>m.s==="proof")) return ["warn","Deine Bestätigung nötig"]; return ["neutral","In Bearbeitung"]; }
+function msBar(o){ const tot=o.price||1; const w=s=>o.ms.filter(m=>m.s===s).reduce((a,m)=>a+m.a,0)/tot*100; return `<div class="bar" aria-label="Zahlungsstatus"><span style="width:${w("released")}%;background:var(--brand)"></span><span style="width:${w("proof")}%;background:var(--gold-fill)"></span></div>`; }
+
+function vOrders(asPartner){
+ const mine=asPartner?S.orders.filter(o=>o.pid==="p4"):S.orders.filter(o=>o.customer===S.profile.name);
+ if(ui.orderId){ const o=S.orders.find(x=>x.id===ui.orderId); if(o) return vOrder(o,asPartner); }
+ return `<section class="section">
+  <div class="section-head"><div><p class="eyebrow">GTA SafePay</p><h1>${t("orders")}</h1></div></div>
+  ${!mine.length?`<p class="muted">Noch keine Aufträge.</p>`:""}
+  <div class="grid">${mine.map(o=>{const p=P(o.pid),[c,l]=orderState(o);return `<button class="card pcard" data-a="order" data-v="${o.id}">
+   <div class="row" style="justify-content:space-between"><span class="small muted num">${o.id}</span><span class="pill ${c}">${l}</span></div>
+   <h3>${esc(o.title)}</h3><p class="small muted">${asPartner?`Kunde: ${esc(o.customer)}`:esc(p.name)} · ${o.created}</p>
+   ${msBar(o)}
+   <div class="row small" style="justify-content:space-between"><span class="muted">${o.ms.filter(m=>m.s==="released").length}/${o.ms.length} ${t("milestones")}</span><b class="num">${eur(o.price)}</b></div></button>`}).join("")}</div>
+  <div class="row small muted" style="gap:16px"><span class="row" style="gap:6px"><span class="dot released"></span>${t("released")}</span><span class="row" style="gap:6px"><span class="dot proof"></span>${t("proof")}</span><span class="row" style="gap:6px"><span class="dot held"></span>${t("held")}</span></div>
+ </section>`;
+}
+function vOrder(o,asPartner){
+ const p=P(o.pid),[c,l]=orderState(o), done=o.ms.every(m=>m.s==="released");
+ const held=o.ms.filter(m=>m.s!=="released").reduce((a,m)=>a+m.a,0);
+ return `<section class="section"><div><button class="link" data-a="backOrders">← ${t("orders")}</button></div>
+ <div class="grid2"><div class="card">
+  <div class="row" style="justify-content:space-between"><span class="small muted num">${o.id} · ${o.created}</span><span class="pill ${c}">${l}</span></div>
+  <h2>${esc(o.title)}</h2>
+  <dl class="kv"><dt>${asPartner?"Kunde":"Partner"}</dt><dd>${asPartner?esc(o.customer):esc(p.name)+" "+badge(p)}</dd><dt>Gesamtpreis</dt><dd class="num">${eur(o.price)}</dd><dt>${t("held")}</dt><dd class="num">${eur(held)}</dd><dt>Zahlungsstatus</dt><dd>bezahlt, beim Zahlungsdienstleister</dd></dl>
+  <div><p class="small" style="font-weight:700">${t("milestones")}</p><div class="ms">${o.ms.map((m,i)=>`<div class="ms-row"><span class="dot ${m.s}"></span><span>${i+1}. ${esc(m.l)} <span class="muted small">· ${t(m.s)}</span></span><span class="row" style="gap:8px"><b class="num">${eur(m.a)}</b>${!asPartner&&!o.dispute&&m.s==="proof"?`<button class="btn primary sm" data-a="release" data-v="${o.id}|${i}">${t("release")}</button>`:""}${asPartner&&!o.dispute&&m.s==="held"&&(i===0||o.ms[i-1].s!=="held")?`<button class="btn gold sm" data-a="proofUp" data-v="${o.id}|${i}">Nachweis senden</button>`:""}</span></div>`).join("")}</div></div>
+  ${o.dispute?`<div class="notice" style="background:var(--danger-soft);color:var(--danger)">Beschwerde offen: ${esc(o.disputeText||"")} Offene Beträge sind eingefroren, bis GTA entscheidet.</div>`:""}
+  <div class="row">${!asPartner&&!o.dispute&&!done?`<button class="btn danger sm" data-a="disputeOpen" data-v="${o.id}">${t("dispute")}</button>`:""}${!asPartner&&done&&!o.reviewed?`<button class="btn gold" data-a="reviewOpen" data-v="${o.id}">${ico("star",14)} ${t("write_review")} (+50 ${t("points")})</button>`:""}${o.reviewed&&!asPartner?`<span class="pill ok">${ico("check",13)} Bewertet</span>`:""}</div>
+  <div><p class="small" style="font-weight:700;margin-bottom:6px">${t("documents")}</p>${o.docs.map(d=>`<p class="small">📄 ${esc(d)}</p>`).join("")||`<p class="small muted">Noch keine Dokumente.</p>`}
+  <label class="drop" style="display:block;margin-top:8px;cursor:pointer">${t("upload")}<input type="file" id="orderFile" data-order="${o.id}" hidden></label></div>
+ </div>
+ <div class="card"><h2>${t("messages")}</h2>
+  <div class="chat" id="chat">${o.msgs.map(m=>`<div class="msg ${asPartner?(m.f==="me"?"them":m.f==="them"?"me":"sys"):m.f}">${esc(m.t)}</div>`).join("")||`<p class="muted small">Schreib dem ${asPartner?"Kunden":"Partner"}. Alle Nachrichten bleiben auf GTA ONE dokumentiert.</p>`}</div>
+  <form class="composer" id="msgForm" data-order="${o.id}" data-as="${asPartner?"partner":"user"}"><input type="text" id="msgIn" placeholder="Nachricht" aria-label="Nachricht" autocomplete="off"><button class="btn primary">${t("send")}</button></form>
+  <p class="muted small">Zahlungen außerhalb von SafePay sind nicht geschützt. Bitte melde Anfragen nach Barzahlung.</p>
+ </div></div></section>`;
+}
+
+const REWARDS=[["Gratis eSIM Start (1 Monat)",1000],["10 € Rabatt bei jedem Partner",1000],["Deutschlandticket-Zuschuss 20 €",2000],["1 Monat GTA ONE Plus",800],["Willkommenspaket bei Ankunft",3000]];
+function vAccount(){
+ const tabs=[["points",t("points")],["docs",t("documents")],["videos","Videos"],["profile","Profil"]];
+ return `<section class="section">
+  <div class="section-head"><div><p class="eyebrow">${esc(S.profile.name)} · GTA ONE Free</p><h1>${t("account")}</h1></div></div>
+  <div class="row" style="gap:6px">${tabs.map(([k,n])=>`<button class="chip" data-a="acct" data-v="${k}" aria-pressed="${ui.acct===k}">${n}</button>`).join("")}</div>
+  ${({points:acPoints,docs:acDocs,videos:acVideos,profile:acProfile})[ui.acct]()}
+ </section>`;
+}
+function acPoints(){
+ const lv=tier(S.points), nxt=lv==="Bronze"?1500:lv==="Silber"?5000:null;
+ return `<div class="grid2"><div class="card" style="background:var(--hero);color:var(--hero-ink);border-color:var(--hero)">
+   <p class="eyebrow" style="color:#E8B84A">GTA Points · ${t("level")} ${lv}</p>
+   <p style="font-family:var(--display);font-size:44px;font-weight:800" class="num">${S.points.toLocaleString("de-DE")}</p>
+   ${nxt?`<div class="meter"><span style="width:${Math.min(100,S.points/nxt*100)}%"></span></div><p class="small" style="color:var(--hero-muted)">Noch ${(nxt-S.points).toLocaleString("de-DE")} bis ${lv==="Bronze"?"Silber":"Gold"} · Silber: 3 % Rabatt · Gold: 5 % Rabatt und persönlicher Ansprechpartner</p>`:`<p class="small">Höchster Status erreicht.</p>`}
+   <div class="row"><span class="small" style="color:var(--hero-muted)">Dein Einladungscode</span><b>BEKZOD-GTA26</b><button class="btn sm gold" data-a="copy" data-v="BEKZOD-GTA26">Kopieren</button></div>
+  </div>
+  <div class="card"><h2>${t("redeem")}</h2>${REWARDS.map(([n,c])=>`<div class="svc"><div style="flex:1;min-width:0"><b>${n}</b><p class="small muted num">${c.toLocaleString("de-DE")} ${t("points")}</p></div>${S.redeemed.includes(n)?`<span class="pill ok">Eingelöst</span>`:`<button class="btn sm ${S.points>=c?"primary":""}" data-a="redeem" data-v="${n}|${c}" ${S.points<c?"disabled":""}>${t("redeem")}</button>`}</div>`).join("")}</div>
+  <div class="card"><h2>So sammelst du</h2><div class="tbl-wrap"><table><tr><th>Aktion</th><th style="text-align:right">${t("points")}</th></tr><tr><td>Buchung über SafePay</td><td class="num" style="text-align:right">1 pro €</td></tr><tr><td>Journey-Phase abgeschlossen</td><td class="num" style="text-align:right">+100</td></tr><tr><td>Verifizierte Bewertung</td><td class="num" style="text-align:right">+50</td></tr><tr><td>Freund geworben</td><td class="num" style="text-align:right">+500</td></tr></table></div></div>
+  <div class="card"><h2>Verlauf</h2>${S.earned.slice(0,8).map(([w,n])=>`<div class="row small" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:8px"><span>${esc(w)}</span><b class="num" style="color:${n<0?"var(--danger)":"var(--brand)"}">${n>0?"+":""}${n}</b></div>`).join("")}</div>
+ </div>`;
+}
+function acDocs(){
+ const cls={"geprüft":"ok","hochgeladen":"warn","vom Partner":"vp"};
+ return `<div class="card"><div class="section-head"><h2>Dokumenten-Tresor</h2><span class="pill neutral">${ico("lock",13)} verschlüsselt, Speicherort EU</span></div>
+  ${S.docs.map(d=>`<div class="svc"><span>📄 ${esc(d.n)}</span><span class="pill ${cls[d.s]||"neutral"}">${esc(d.s)}</span></div>`).join("")}
+  <label class="drop" id="drop" style="display:block;cursor:pointer">Datei hierher ziehen oder <u>auswählen</u><input type="file" id="docFile" hidden multiple></label>
+  <p class="muted small">Im Prototyp bleibt nur der Dateiname im Browser gespeichert. Die Datei wird nicht hochgeladen.</p></div>`;
+}
+const VIDEOS=[["Wie läuft eine Apostille ab?","3:10"],["Was brauche ich am Flughafen?","2:45"],["Wie aktiviere ich meine SIM oder eSIM?","2:05"],["Wie funktioniert die Anmeldung in Deutschland?","4:20"],["Welche Unterlagen braucht ein Arbeitgeber?","3:30"],["Wie erkenne ich eine unseriöse Agentur?","3:55"]];
+function acVideos(){
+ return `<div class="grid">${VIDEOS.map(([n,d],i)=>`<div class="card"><button class="video" style="border:0;width:100%" data-a="video" data-v="${i}" aria-label="Video abspielen: ${esc(n)}"><span class="play" style="color:#0E1B33">${ico("play",22)}</span><span class="langs">UZ · RU · DE · EN</span><span class="dur num">${d}</span></button><h3>${esc(n)}</h3><p class="small muted">Dila AI · automatisch aktualisiert</p></div>`).join("")}</div>`;
+}
+function acProfile(){
+ const p=S.profile;
+ return `<div class="card"><h2>Profil</h2><dl class="kv"><dt>Name</dt><dd>${esc(p.name)}, ${p.age}</dd><dt>Herkunft</dt><dd>${esc(p.country)}</dd><dt>Ziel</dt><dd>${esc(p.goal)} in ${esc(p.city)}</dd><dt>Beruf</dt><dd>${esc(p.job)}</dd><dt>Mitgliedschaft</dt><dd>GTA ONE Free</dd></dl>
+  <div class="row"><button class="btn" data-a="restart">${t("restart")}</button><button class="btn danger" data-a="reset">${t("reset_demo")}</button></div></div>`;
+}
+
+/* ---------- partner portal ---------- */
+function vPartnerPortal(){
+ const me=P("p4"), mine=S.orders.filter(o=>o.pid==="p4");
+ const rel=mine.flatMap(o=>o.ms).filter(m=>m.s==="released").reduce((a,m)=>a+m.a,0);
+ const held=mine.flatMap(o=>o.ms).filter(m=>m.s!=="released").reduce((a,m)=>a+m.a,0);
+ if(ui.orderId) return vOrders(true);
+ return `<section class="section">
+  <div class="section-head"><div><p class="eyebrow">Partner-Portal</p><h1>${esc(me.name)}</h1></div>${badge(me)}</div>
+  <div class="stats card">${[["Ausgezahlt",eur(rel)],["In Treuhand",eur(held)],["Bewertung",me.rating.toFixed(1).replace(".",",")+" ★"],["Trust Score",me.trust+" / 100"],["Antwortzeit","2,4 h"]].map(([l,v])=>`<div class="stat"><span class="small muted">${l}</span><b class="num">${v}</b></div>`).join("")}</div>
+  <div class="grid2">
+   <div class="card"><h2>Aufträge</h2>${mine.map(o=>{const[c,l]=orderState(o);return `<button class="svc" style="border-left:0;border-right:0;border-bottom:0;background:none;width:100%;text-align:left" data-a="order" data-v="${o.id}"><div style="flex:1;min-width:0"><b>${esc(o.title)}</b><p class="small muted">${o.id} · ${esc(o.customer)}</p></div><span class="pill ${c==="warn"?"neutral":c}">${c==="warn"?"Wartet auf Kunde":l}</span></button>`}).join("")}</div>
+   <div class="card"><h2>Leistungen & Preise</h2>${me.services.map(s=>`<div class="svc"><div style="flex:1;min-width:0"><b>${esc(s.name)}</b><p class="small muted">${s.days} ${t("days")}${s.ms?` · ${s.ms.map(m=>m[0]+" "+m[1]+" %").join(", ")}`:""}</p></div><b class="num">${eur(s.price)}</b></div>`).join("")}
+    <form id="svcForm" class="form" style="border-top:1px solid var(--line);padding-top:12px"><label class="f">Neue Leistung<input type="text" id="sf-name" required placeholder="z. B. Bewerbungsmappe Deutsch"></label><label class="f">Preis in €<input type="number" id="sf-price" min="0" required value="150"></label><label class="f">Lieferzeit (Tage)<input type="number" id="sf-days" min="1" value="7"></label><div class="row" style="align-items:end"><button class="btn primary">${t("add_service")}</button></div></form>
+    <p class="muted small">Neue Leistungen und Preisänderungen prüft GTA vor Veröffentlichung.</p></div>
+   <div class="card"><h2>Verifizierung</h2>${[["Handelsregister-Auszug",1],["Ausweis der Geschäftsführung",1],["Geschäftsadresse bestätigt",1],["Bankdaten verifiziert",1],["Erlaubnis Arbeitsvermittlung",1],["Muster-Vertrag und AGB geprüft",1],["GTA-Prozess-Schulung",1],["Jährliche Re-Zertifizierung",0]].map(([n,ok])=>`<div class="row small" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:8px"><span>${n}</span><span class="pill ${ok?"ok":"warn"}">${ok?"erfüllt":"fällig 03/2027"}</span></div>`).join("")}</div>
+  </div></section>`;
+}
+
+/* ---------- admin ---------- */
+function vAdmin(){
+ const act=S.partners.filter(p=>p.status==="active").length, pend=S.partners.filter(p=>p.status==="pending").length;
+ const disp=S.orders.filter(o=>o.dispute), gmv=S.orders.reduce((a,o)=>a+o.price,0), revQ=S.reviews.filter(r=>r.ok===null);
+ const tabs=[["partners",`${t("partners")} (${S.partners.length})`],["disputes",`${t("disputes")} (${disp.length})`],["reviews",`${t("reviews")} (${revQ.length})`],["cats","Kategorien"]];
+ return `<section class="section">
+  <div class="section-head"><div><p class="eyebrow">GTA Admin</p><h1>${t("dashboard")}</h1></div><span class="sample">Demodaten</span></div>
+  <div class="stats card">${[["Nutzer","1.284"],["Aktive Partner",act],["Prüfung offen",pend],["Transaktionsvolumen",eur(gmv)],["Offene Beschwerden",disp.length]].map(([l,v])=>`<div class="stat"><span class="small muted">${l}</span><b class="num">${v}</b></div>`).join("")}</div>
+  <div class="row" style="gap:6px">${tabs.map(([k,n])=>`<button class="chip" data-a="adminTab" data-v="${k}" aria-pressed="${ui.adminTab===k}">${n}</button>`).join("")}</div>
+  ${ui.adminTab==="partners"?`<div class="card"><div class="tbl-wrap"><table><tr><th>Partner</th><th>Kategorie</th><th>Status</th><th>Stufe</th><th>Trust</th><th>Aktion</th></tr>
+   ${S.partners.map(p=>`<tr><td><b>${esc(p.name)}</b>${p.flags?`<br>${p.flags.map(f=>`<span class="pill bad" style="margin:3px 3px 0 0">${esc(f)}</span>`).join("")}`:""}</td><td>${esc(CATS.find(c=>c.id===p.cat).name)}</td><td><span class="pill ${p.status==="active"?"ok":p.status==="pending"?"warn":"bad"}">${{active:"aktiv",pending:"in Prüfung",suspended:"gesperrt"}[p.status]}</span></td>
+   <td><select id="lvl-${p.id}" data-a="level" data-v="${p.id}" aria-label="Stufe ${esc(p.name)}">${Object.entries(LEVELS).map(([k,v])=>`<option value="${k}" ${p.level===k?"selected":""}>${v.label}</option>`).join("")}</select></td>
+   <td class="num">${p.trust||"–"}</td><td><div class="row" style="gap:6px;flex-wrap:nowrap">${p.status!=="active"?`<button class="btn primary sm" data-a="pStatus" data-v="${p.id}|active">${t("approve")}</button>`:""}${p.status!=="suspended"?`<button class="btn danger sm" data-a="pStatus" data-v="${p.id}|suspended">${t("suspend")}</button>`:""}</div></td></tr>`).join("")}
+   </table></div></div>`:""}
+  ${ui.adminTab==="disputes"?`<div class="grid">${disp.map(o=>`<div class="card"><div class="row" style="justify-content:space-between"><span class="small muted num">${o.id}</span><span class="pill bad">offen</span></div><h3>${esc(o.title)}</h3><p class="small muted">${esc(o.customer)} gegen ${esc(P(o.pid).name)}</p><p>${esc(o.disputeText)}</p><p class="small">Eingefroren: <b class="num">${eur(o.ms.filter(m=>m.s!=="released").reduce((a,m)=>a+m.a,0))}</b></p><div class="row"><button class="btn sm" data-a="resolve" data-v="${o.id}|refund">${t("refund")}</button><button class="btn primary sm" data-a="resolve" data-v="${o.id}|release">An Partner freigeben</button></div></div>`).join("")||`<p class="muted">Keine offenen Beschwerden.</p>`}</div>`:""}
+  ${ui.adminTab==="reviews"?`<div class="grid">${revQ.map(r=>{const i=S.reviews.indexOf(r);return `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(r.by)} → ${esc(P(r.pid).name)}</b><span class="stars">${"★".repeat(r.stars)}</span></div><p>${esc(r.text)}</p><span class="pill warn">Automatisch markiert: Hinweis auf Zahlung außerhalb SafePay</span><div class="row"><button class="btn sm" data-a="rev" data-v="${i}|1">Veröffentlichen</button><button class="btn danger sm" data-a="rev" data-v="${i}|0">Ausblenden und Partner prüfen</button></div></div>`}).join("")||`<p class="muted">Keine Bewertungen in der Warteschlange.</p>`}</div>`:""}
+  ${ui.adminTab==="cats"?`<div class="card"><div class="tbl-wrap"><table><tr><th>Kategorie</th><th>Aktive Partner</th><th>Pflichtnachweise</th></tr>${CATS.map(c=>`<tr><td><b>${c.name}</b></td><td class="num">${S.partners.filter(p=>p.cat===c.id&&p.status==="active").length}</td><td class="small">${{agency:"Erlaubnis Arbeitsvermittlung, Musterverträge",language:"Lizenz Prüfungszentrum oder Schulzulassung",translation:"Vereidigung / Ermächtigung",apostille:"Notarzulassung",travel:"Reiseveranstalter-Registrierung, Insolvenzabsicherung",insurance:"Erlaubnis § 34d GewO",transfer:"Personenbeförderungsschein",relocation:"Gewerbeanmeldung, Haftpflicht"}[c.id]}</td></tr>`).join("")}</table></div></div>`:""}
+ </section>`;
+}
+
+/* ---------- Dila ---------- */
+function dilaAnswer(q){
+ const s=q.toLowerCase(), ci=curPhase(), open=S.journey[ci].tasks.filter(x=>!x.done);
+ if(/fehlt|nächst|next|nima|что|todo|was muss/.test(s)) return `Du bist in Phase ${ci+1}: ${S.journey[ci].name}. Offen sind:\n${open.map(x=>"• "+x.t).join("\n")}\nIch kann dir passende geprüfte Partner zeigen.`;
+ if(/apostil/.test(s)) return "Apostille: 1) Original zum Justizorgan bzw. über einen Notar einreichen. 2) Nach ca. 5 Werktagen abholen. 3) Erst danach übersetzen lassen, damit die Apostille mitübersetzt wird. Apostil Markazi macht das ab 35 € mit SafePay.";
+ if(/sim|esim|handy|telefon/.test(s)) return "Am einfachsten ist eine eSIM vor dem Abflug. Services → SIM & eSIM zeigt drei Tarife und die Aktivierung in 4 Schritten.";
+ if(/anmeld|bürgeramt|wohnsitz/.test(s)) return `Die Wohnsitzanmeldung in ${S.profile.city} muss innerhalb von 14 Tagen nach dem Einzug erfolgen. Du brauchst Reisepass, Visum und die Wohnungsgeberbestätigung vom Vermieter.`;
+ if(/flughafen|airport|flug|einreise/.test(s)) return "Ins Handgepäck: Reisepass mit Visum, Arbeitsvertrag, Versicherungsnachweis, Adresse der ersten Unterkunft, etwas Bargeld in Euro. Medikamente mit Rezept auf Englisch.";
+ if(/geld|money|pul|перевод|wechsel/.test(s)) return "Vergleiche immer den Betrag, der ankommt. Unter Services → Geld & Wechsel siehst du drei Anbieter im Vergleich. Nutze keine privaten Wechsler.";
+ if(/punkt|point|ball|балл/.test(s)) return `Du hast ${S.points.toLocaleString("de-DE")} Punkte (Status ${tier(S.points)}). Einlösen kannst du sie unter Konto → Punkte.`;
+ if(/betrug|seriös|fake|scam|agentur/.test(s)) return "Warnsignale: garantiertes Visum, nur Barzahlung, kein Vertrag, Druck zur schnellen Zahlung. Auf GTA ONE zahlst du nur über SafePay, und das Geld geht erst nach Leistung an den Partner.";
+ return "Das kann ich im Prototyp noch nicht genau beantworten. Frag mich nach: Was fehlt mir noch? · Apostille · SIM · Anmeldung · Flughafen · Geld senden · Betrug erkennen.";
+}
+function dilaPanel(){
+ return `<header><div class="row" style="flex-wrap:nowrap"><div class="dila-face">D</div><div><h2>Dila AI</h2><p class="small muted">Kennt deinen Journey-Status · UZ · RU · DE · EN</p></div></div><button class="x" data-a="close" aria-label="Schließen">×</button></header>
+ <div class="chat" id="dchat">${S.dila.map(m=>`<div class="msg ${m.f}">${esc(m.t)}</div>`).join("")}</div>
+ <div class="row" style="gap:6px">${["Was fehlt mir noch?","Wie läuft eine Apostille ab?","Wie erkenne ich Betrug?"].map(q=>`<button class="chip" data-a="dilaAsk" data-v="${q}">${q}</button>`).join("")}</div>
+ <form class="composer" id="dilaForm"><input type="text" id="dilaIn" placeholder="Frag Dila …" aria-label="Frage an Dila" autocomplete="off"><button class="btn primary">${t("send")}</button></form>
+ <p class="muted small">Prototyp: regelbasierte Antworten. Im Produkt: Sprachmodell mit Journey-Kontext und geprüfter Wissensbasis.</p>`;
+}
+
+/* ---------- shell ---------- */
+function render(){
+ const role=S.role;
+ const tabs=role==="user"?[["journey",t("journey")],["market",t("market")],["services",t("services")],["orders",t("orders")],["account",t("account")]]:[];
+ let body="";
+ if(role==="user") body=({journey:vJourney,market:vMarket,services:vServices,orders:()=>vOrders(false),account:vAccount})[S.view]();
+ else if(role==="partner") body=vPartnerPortal();
+ else body=vAdmin();
+ const app=document.getElementById("app");
+ const focusId=document.activeElement&&document.activeElement.id, selStart=document.activeElement&&document.activeElement.selectionStart;
+ app.innerHTML=`
+ <header class="top"><div class="top-in">
+  <div class="logo"><i>G</i>GTA ONE</div>
+  <div class="spacer"></div>
+  ${role==="user"?`<button class="pts" data-a="acct" data-v="points" aria-label="${t("points")}">★ <span class="num">${S.points.toLocaleString("de-DE")}</span></button>`:""}
+  <div class="seg" role="group" aria-label="Sprache">${["uz","ru","de","en"].map(l=>`<button data-a="lang" data-v="${l}" aria-pressed="${S.lang===l}">${l.toUpperCase()}</button>`).join("")}</div>
+  <div class="seg" role="group" aria-label="Rolle">${["user","partner","admin"].map(r=>`<button data-a="role" data-v="${r}" aria-pressed="${role===r}">${t("role_"+r)}</button>`).join("")}</div>
+ </div></header>
+ ${tabs.length?`<nav class="tabs" aria-label="Hauptnavigation"><div class="tabs-in">${tabs.map(([k,n])=>`<button class="tab" data-a="view" data-v="${k}" ${S.view===k?'aria-current="page"':""}>${ico(k)}<span>${n}</span></button>`).join("")}</div></nav>`:""}
+ <main>${t("lang_note")?`<p class="notice">${t("lang_note")}</p>`:""}${body}</main>
+ ${role==="user"?`<button class="dila-fab" data-a="dila"><span class="dila-face">D</span>${t("ask_dila")}</button>`:""}
+ ${modal?`<div class="scrim" data-a="scrim"><div class="modal" role="dialog" aria-modal="true">${modal()}</div></div>`:""}
+ ${toastMsg?`<div class="toast" role="status">${esc(toastMsg)}</div>`:""}`;
+ document.documentElement.lang=S.lang;
+ const c=document.getElementById("chat")||null; if(c) c.scrollTop=c.scrollHeight;
+ const d=document.getElementById("dchat"); if(d) d.scrollTop=d.scrollHeight;
+ if(focusId){ const el=document.getElementById(focusId); if(el){ el.focus(); try{ if(selStart!=null) el.setSelectionRange(selStart,selStart); }catch(e){} } }
+ save();
+}
+
+function go(view){ S.view=view; ui.partnerId=null; ui.orderId=null; modal=null; window.scrollTo(0,0); }
+
+document.addEventListener("click",e=>{
+ const el=e.target.closest("[data-a]"); if(!el) return;
+ const a=el.dataset.a, v=el.dataset.v||"";
+ if(a==="scrim"&&e.target!==el) return;
+ if(el.tagName==="INPUT"&&el.type==="checkbox"&&a!=="task"&&a!=="pro"&&a!=="usePts") return;
+ switch(a){
+  case "view": go(v); break;
+  case "lang": S.lang=v; break;
+  case "role": S.role=v; ui.orderId=null; ui.partnerId=null; modal=null; if(v==="user") S.view=S.view||"journey"; break;
+  case "phase": S.selPhase=+v; break;
+  case "task": { const before=S.journey.map(phaseDone); S.journey.forEach(ph=>ph.tasks.forEach(x=>{ if(x.id===v) x.done=el.checked; })); S.journey.forEach((ph,i)=>{ if(!before[i]&&phaseDone(ph)){ addPoints(100,`Phase ${i+1} abgeschlossen`); toast(`Phase ${i+1} geschafft! +100 Punkte`); S.selPhase=null; } }); break; }
+  case "goCat": go("market"); ui.cat=v; break;
+  case "cat": ui.cat=v; break;
+  case "pro": ui.pro=el.checked; break;
+  case "partner": S.role="user"; S.view="market"; ui.partnerId=v; modal=null; window.scrollTo(0,0); break;
+  case "back": ui.partnerId=null; break;
+  case "book": { const [pid,sid]=v.split("|"); ui.usePts=false; modal=()=>bookingModal(pid,sid); break; }
+  case "usePts": { ui.usePts=el.checked; const m=modal; modal=m; break; }
+  case "pay": { const [pid,sid]=v.split("|"), p=P(pid), s=p.services.find(x=>x.id===sid);
+   const maxDisc=Math.min(Math.floor(S.points/100),Math.floor(s.price*0.1)), disc=ui.usePts?maxDisc:0;
+   if(disc){ S.points-=disc*100; S.earned.unshift([`Rabatt ${s.name}`,-disc*100]); }
+   const ms=(s.ms||[["Leistung",100]]).map(([l,pc])=>({l,a:Math.round(s.price*pc/100),s:"held"}));
+   const id="GTA-"+(10600+S.orders.length);
+   S.orders.unshift({id,pid,title:s.name,price:s.price,created:new Date().toISOString().slice(0,10),customer:S.profile.name,dispute:false,reviewed:false,ms,docs:[],msgs:[{f:"sys",t:`Bezahlt: ${eur(s.price-disc)} liegen in Treuhand.`},{f:"them",t:`Salom ${S.profile.name}, danke für Ihre Buchung! Wir melden uns innerhalb von 24 Stunden.`}]});
+   const earn=Math.round(s.price-disc); if(earn>0) addPoints(earn,`Buchung ${s.name}`);
+   modal=null; S.view="orders"; ui.partnerId=null; ui.orderId=id; toast(`Bezahlt. Geld liegt sicher in Treuhand. +${earn} Punkte`); break; }
+  case "close": case "scrim": modal=null; break;
+  case "order": ui.orderId=v; window.scrollTo(0,0); break;
+  case "backOrders": ui.orderId=null; break;
+  case "release": { const [id,i]=v.split("|"), o=S.orders.find(x=>x.id===id); o.ms[+i].s="released"; o.msgs.push({f:"sys",t:`Meilenstein „${o.ms[+i].l}“ bestätigt. ${eur(o.ms[+i].a)} an den Partner ausgezahlt.`}); toast("Freigegeben. Der Partner erhält die Zahlung."); break; }
+  case "proofUp": { const [id,i]=v.split("|"), o=S.orders.find(x=>x.id===id); o.ms[+i].s="proof"; o.docs.push(`Nachweis_${o.ms[+i].l.replace(/\s+/g,"-")}.pdf`); o.msgs.push({f:"them",t:`Nachweis für „${o.ms[+i].l}“ ist hochgeladen. Bitte prüfen und bestätigen.`}); toast("Nachweis gesendet. Der Kunde wird benachrichtigt."); break; }
+  case "disputeOpen": modal=()=>`<header><div><p class="eyebrow" style="color:var(--danger)">${t("dispute")}</p><h2>Was ist passiert?</h2></div><button class="x" data-a="close" aria-label="Schließen">×</button></header><form id="dispForm" data-order="${v}" style="display:flex;flex-direction:column;gap:12px"><label class="f">Beschreibung<textarea id="dispText" rows="4" required placeholder="z. B. Leistung nicht erbracht, Partner antwortet nicht"></textarea></label><p class="notice">Offene Beträge werden sofort eingefroren. GTA meldet sich innerhalb von 48 Stunden.</p><div class="row" style="justify-content:flex-end"><button type="button" class="btn" data-a="close">${t("cancel")}</button><button class="btn danger">Beschwerde senden</button></div></form>`; break;
+  case "reviewOpen": ui.rv={id:v,q:5,s:5,p:5,k:5}; modal=reviewModal; break;
+  case "rate": { const [k,n]=v.split("|"); ui.rv[k]=+n; break; }
+  case "svcTab": ui.svcTab=v; break;
+  case "affiliate": toast(`Weiter zum Anbieter: ${v} (im Prototyp simuliert)`); break;
+  case "redeemGo": go("account"); ui.acct="points"; break;
+  case "acct": S.role="user"; go("account"); ui.acct=v; break;
+  case "redeem": { const [n,c]=v.split("|"); if(S.points>=+c){ S.points-=+c; S.earned.unshift([`Eingelöst: ${n}`,-c]); S.redeemed.push(n); toast(`Eingelöst: ${n}. Gutschein kommt per E-Mail.`);} break; }
+  case "copy": { const done=()=>toast("Code kopiert"); try{ navigator.clipboard.writeText(v).then(done,()=>toast(`Code: ${v}`)); }catch(err){ toast(`Code: ${v}`);} break; }
+  case "video": { const [n,d]=VIDEOS[+v]; modal=()=>`<header><div><p class="eyebrow">Dila AI · ${d}</p><h2>${esc(n)}</h2></div><button class="x" data-a="close" aria-label="Schließen">×</button></header><div class="video"><div class="dila-face" style="width:96px;height:96px;font-size:36px">D</div><span class="langs">UZ · RU · DE · EN</span></div><p class="muted small">Platzhalter. Im Produkt: KI-Avatar-Video mit Untertiteln in vier Sprachen.</p><p>${esc(dilaAnswer(n))}</p>`; break; }
+  case "dila": modal=dilaPanel; break;
+  case "dilaAsk": S.dila.push({f:"me",t:v},{f:"them",t:dilaAnswer(v)}); modal=dilaPanel; break;
+  case "restart": S.onboarded=false; go("journey"); break;
+  case "reset": S=seedState(); ui.cat="all"; go("journey"); toast("Demo zurückgesetzt"); break;
+  case "adminTab": ui.adminTab=v; break;
+  case "pStatus": { const [id,st]=v.split("|"), p=P(id); p.status=st; if(st==="active"&&!p.trust){p.trust=70;} toast(`${p.name}: ${st==="active"?"freigegeben":"gesperrt"}`); break; }
+  case "resolve": { const [id,how]=v.split("|"), o=S.orders.find(x=>x.id===id); o.dispute=false; o.ms.forEach(m=>{ if(m.s!=="released") m.s=how==="release"?"released":"refunded"; }); if(how==="refund"){ o.ms=o.ms.filter(m=>m.s!=="refunded"); o.price=o.ms.reduce((a,m)=>a+m.a,0); } toast(how==="refund"?"Kunde erstattet":"An Partner ausgezahlt"); break; }
+  case "rev": { const [i,ok]=v.split("|"); S.reviews[+i].ok=ok==="1"; toast(ok==="1"?"Veröffentlicht":"Ausgeblendet, Partner zur Prüfung markiert"); break; }
+  default: return;
+ }
+ render();
+});
+
+function reviewModal(){
+ const crit=[["q","Qualität"],["s","Geschwindigkeit"],["p","Preis-Leistung"],["k","Kommunikation"]];
+ return `<header><div><p class="eyebrow">Verified Purchase</p><h2>Wie war die Leistung?</h2></div><button class="x" data-a="close" aria-label="Schließen">×</button></header>
+ ${crit.map(([k,n])=>`<div class="row" style="justify-content:space-between"><span>${n}</span><span class="row" style="gap:2px">${[1,2,3,4,5].map(i=>`<button class="x" style="background:none;width:30px;height:30px;color:${i<=ui.rv[k]?"var(--gold)":"var(--line)"}" data-a="rate" data-v="${k}|${i}" aria-label="${n} ${i} von 5">★</button>`).join("")}</span></div>`).join("")}
+ <form id="revForm" style="display:flex;flex-direction:column;gap:12px"><label class="f">Kommentar<textarea id="revText" rows="3" placeholder="Was lief gut, was nicht?"></textarea></label><div class="row" style="justify-content:flex-end"><button class="btn primary">Bewertung senden (+50 ${t("points")})</button></div></form>`;
+}
+
+document.addEventListener("input",e=>{
+ if(e.target.id==="q"){ ui.q=e.target.value; render(); }
+ if(e.target.id==="amt"){ ui.amount=e.target.value; render(); }
+});
+document.addEventListener("change",e=>{
+ const el=e.target;
+ if(el.id==="dir"){ ui.dir=el.value; render(); }
+ if(el.dataset.a==="level"){ P(el.dataset.v).level=el.value; toast("Stufe geändert"); render(); }
+ if(el.id==="docFile"){ [...el.files].forEach(f=>S.docs.push({n:f.name,s:"hochgeladen"})); toast("Datei hinzugefügt. GTA prüft das Dokument."); render(); }
+ if(el.id==="orderFile"){ const o=S.orders.find(x=>x.id===el.dataset.order); [...el.files].forEach(f=>o.docs.push(f.name)); toast("Dokument zum Auftrag hinzugefügt"); render(); }
+});
+document.addEventListener("dragover",e=>{ const d=e.target.closest&&e.target.closest("#drop"); if(d){ e.preventDefault(); d.classList.add("over"); } });
+document.addEventListener("dragleave",e=>{ const d=e.target.closest&&e.target.closest("#drop"); if(d) d.classList.remove("over"); });
+document.addEventListener("drop",e=>{ const d=e.target.closest&&e.target.closest("#drop"); if(d){ e.preventDefault(); [...e.dataTransfer.files].forEach(f=>S.docs.push({n:f.name,s:"hochgeladen"})); toast("Datei hinzugefügt. GTA prüft das Dokument."); render(); } });
+
+document.addEventListener("submit",e=>{
+ e.preventDefault(); const f=e.target;
+ if(f.id==="onb"){
+  const g=n=>f.elements[n].value;
+  S.profile={name:g("name").trim()||"Gast",age:+g("age")||30,country:g("country"),goal:g("goal"),job:g("job").trim()||"Fachkraft",city:g("city").trim()||"Berlin",contract:g("contract")==="1",married:g("married")==="1",visa:false};
+  S.journey=buildJourney(S.profile); S.onboarded=true; S.selPhase=null; S.dila=[{f:"them",t:`Salom ${S.profile.name}! Deine Journey ist fertig. Frag mich: Was fehlt mir noch?`}];
+  toast("Deine persönliche Journey ist erstellt");
+ }
+ if(f.id==="msgForm"){
+  const inp=f.querySelector("input"), txt=inp.value.trim(); if(!txt) return;
+  const o=S.orders.find(x=>x.id===f.dataset.order), asP=f.dataset.as==="partner";
+  o.msgs.push({f:asP?"them":"me",t:txt});
+  if(/bar|cash|whatsapp|telegram|naqd|налич/i.test(txt)) o.msgs.push({f:"sys",t:"Hinweis von GTA: Zahlungen außerhalb von SafePay sind nicht geschützt."});
+  else if(!asP) setTimeout(()=>{ o.msgs.push({f:"them",t:"Danke, wir haben Ihre Nachricht erhalten und antworten in Kürze."}); render(); },1200);
+ }
+ if(f.id==="dilaForm"){ const q=f.querySelector("input").value.trim(); if(!q) return; S.dila.push({f:"me",t:q},{f:"them",t:dilaAnswer(q)}); modal=dilaPanel; }
+ if(f.id==="dispForm"){ const o=S.orders.find(x=>x.id===f.dataset.order); o.dispute=true; o.disputeText=f.querySelector("textarea").value.trim(); o.msgs.push({f:"sys",t:"Beschwerde eröffnet. Offene Beträge sind eingefroren."}); modal=null; toast("Beschwerde gesendet. GTA prüft innerhalb von 48 Stunden."); }
+ if(f.id==="revForm"){ const o=S.orders.find(x=>x.id===ui.rv.id), r=ui.rv, avg=Math.round((r.q+r.s+r.p+r.k)/4);
+  S.reviews.unshift({pid:o.pid,by:S.profile.name,stars:avg,text:f.querySelector("textarea").value.trim()||"Ohne Kommentar",ok:true}); o.reviewed=true; addPoints(50,`Bewertung ${P(o.pid).name}`); modal=null; toast("Danke! +50 Punkte"); }
+ if(f.id==="svcForm"){ const me=P("p4"); me.services.push({id:"s"+Date.now(),name:f.querySelector("#sf-name").value.trim(),price:+f.querySelector("#sf-price").value||0,days:+f.querySelector("#sf-days").value||1}); toast("Leistung angelegt. Wartet auf GTA-Freigabe."); }
+ render();
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&modal){ modal=null; render(); } });
+
+render();
+})();
+</script>
